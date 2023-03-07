@@ -1,0 +1,41 @@
+<div class="flex-wrap m-5 grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-2">
+    <div 
+        class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg 
+        shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 
+        dark:hover:bg-gray-700"
+        *ngFor="let item of this.dummyData2"
+    >
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            Versión #{{item.version}}
+        </h5>
+        <p class="font-normal text-gray-700 dark:text-gray-400">
+            Descripción: {{item.decripcionVersion}}
+        </p>
+
+        <div class="flex flex-wrap">
+            <div>
+                <button 
+                    class="mat-raised-button mat-focus-indicator mat-button-base mat-primary mt-2 ml-2"
+                >
+                    Descargar editable
+                </button>
+            </div>
+
+            <div>
+                <button 
+                    class="mat-raised-button mat-focus-indicator mat-button-base mat-primary mt-2 ml-2"
+                >
+                    Descargar firmado
+                </button>
+            </div>
+
+            <div>
+                <button 
+                    class="mat-raised-button mat-focus-indicator mat-button-base mat-primary mt-2 ml-2"
+                >
+                    Detalle de archivo
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

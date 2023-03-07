@@ -1,0 +1,19 @@
+<div class="flex items-center" mat-dialog-title>
+    <h2 class="headline flex-auto">Información de documento</h2>
+    <button></button>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+      <mat-icon svgIcon="mat:close"></mat-icon>
+    </button>
+</div>
+
+<mat-divider class="-mx-6 text-border"></mat-divider>
+<mat-dialog-content class="px-1" *ngIf="this.objeto.id">
+    <mat-tab-group animationDuration="2ms">
+        <mat-tab label="Historico">
+            <vex-tab-historico></vex-tab-historico>
+        </mat-tab>
+        <mat-tab label="Nueva versión">
+            <vex-tab-nueva-version></vex-tab-nueva-version>
+        </mat-tab>     
+    </mat-tab-group>
+</mat-dialog-content>
