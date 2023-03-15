@@ -31,7 +31,7 @@ export class ModalForoComponent implements OnInit, AfterViewInit {
     comentario: "",
   });
 
-  idUsuarioActual = 1
+  idUsuarioActual = 2
   comentarioDocumentoProyecto: ComentarioDocumentoProyectoFormModel = new ComentarioDocumentoProyectoFormModel();
 
   constructor(
@@ -42,7 +42,7 @@ export class ModalForoComponent implements OnInit, AfterViewInit {
     private mesaValidacionService: MesaValidacionService,
     private swalService: SwalServices
   ) {
-    debugger;
+    ;
     console.log(this.doc);
   }
 

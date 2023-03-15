@@ -35,7 +35,7 @@ export class TabHistoricoComponent implements OnInit {
   )
   {
 
-    debugger
+
 
     console.log(this.documento);
 /*     this.dummyData = archivoServicio.getArchivosById(this.objeto.id)
@@ -43,7 +43,7 @@ export class TabHistoricoComponent implements OnInit {
   }
 
   async ngOnInit(){
-debugger
+
 
     this.listaVersionesDocumento = await this.obtenerVersionesDocumentoProyecto(this.documento.relProyectoDocumentacionId);
 

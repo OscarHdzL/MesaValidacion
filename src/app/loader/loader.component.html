@@ -1,0 +1,12 @@
+<div *ngIf="this.loaderService.getLoading()">
+<ngx-loading
+      [show]="true"
+      [config]="{
+        animationType: ngxLoadingAnimationTypes.wanderingCubes,
+        primaryColour: primaryColour,
+        secondaryColour: secondaryColour,
+        backdropBorderRadius: '3px'
+      }"
+      [template]="loadingTemplate"
+    ></ngx-loading>
+  </div>

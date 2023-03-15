@@ -18,7 +18,7 @@ export class DocumentosProyectoModel{
 
 
 export class DocumentosVersionProyectoModel{
-    id?: any;
+/*     id?: any;
     version?: any;
     descripcion?: any;
     detalle?: any;
@@ -32,8 +32,23 @@ export class DocumentosVersionProyectoModel{
     tblDocumentacionId: number;
     documento: string;
     tblProyectoId: number;
-    proyecto: string;
-    contadorVersiones: number
+    proyecto: string; */
+
+    id: number;
+    relProyectoDocumentacionId: number;
+    version: number;
+    descripcion: string;
+    detalle: string;
+    editable: string;
+    firmado?: any;
+    validado: boolean;
+    activo: boolean;
+    inclusion: Date;
+    relProyectoDocumentacion?: any;
+    tblDocumentoComentarios: any[];
+
+    contadorVersiones: number;
+    ultimaVersion: boolean = false;
 
   }
 

@@ -17,7 +17,7 @@ import { ModalForoComponent } from '../modal-foro/modal-foro.component';
   styleUrls: ['./modal-doc-info.component.scss']
 })
 export class ModalDocInfoComponent implements OnInit {
-  indexTab:number = 0;
+  indexTab:number;
   panelOpenState = false
   formVersionDocumento: FormGroup
   formVersionDocumentoEdicion: FormGroup
@@ -70,9 +70,11 @@ export class ModalDocInfoComponent implements OnInit {
 
 
   async ngOnInit() {
-    this.indexTab = 0;
 
     this.listaVersionesDocumento = await this.obtenerVersionesDocumentoProyecto(this.documento.relProyectoDocumentacionId);
+    this.listaVersionesDocumento.forEach((x)=>{
+      x.id == this.documento.idUltimaVersion ? x.ultimaVersion = true : x.ultimaVersion = false
+    });
 
     this.dataSource = new MatTableDataSource<any>(this.listaVersionesDocumento);
     this.matPaginatorIntl.itemsPerPageLabel = "Actividades por página";
@@ -80,6 +82,11 @@ export class ModalDocInfoComponent implements OnInit {
     this.matPaginatorIntl.nextPageLabel = 'Siguiente página';
 
     await this.llenarFormulario();
+
+    setTimeout(() => {
+      this.indexTab = 0;
+    }, 100);
+
   }
 
 
@@ -113,7 +120,7 @@ export class ModalDocInfoComponent implements OnInit {
   }
 
   public llenarFormulario(){
-debugger
+
     if(this.documento.idUltimaVersion){
 
       this.ultimaVersionModel = this.listaVersionesDocumento.find((x)=> x.id == this.documento.idUltimaVersion);
@@ -265,8 +272,8 @@ debugger
    comentariosAgregar() {
     this.documento.modoVisualizacion = false;
     this.dialog.open(ModalForoComponent, {
-      height: '80%',
-      width: '100%',
+
+      width: '80%',
       maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
       autoFocus: true,
       data: this.documento,
@@ -279,7 +286,7 @@ debugger
 
 
   comentarios(documento: DocumentosVersionProyectoModel) {
-    debugger
+
     //SE GENERA UN OBJETO DocumentosProyectoModel PARA QUE SE RECIBA TAL CUAL EN EL FORO
     let doc = new DocumentosProyectoModel();
     if(documento.id == this.documento.idUltimaVersion){
@@ -292,8 +299,8 @@ debugger
 
     this.documento.modoVisualizacion = false;
     this.dialog.open(ModalForoComponent, {
-      height: '80%',
-      width: '100%',
+
+      width: '80%',
       maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
       autoFocus: true,
       data: doc,
@@ -302,5 +309,32 @@ debugger
       console.log(result);
       this.ngOnInit()
     });
+
+
+
+  }
+
+  async ValidarVersion(version: DocumentosVersionProyectoModel){
+
+    let versionValidar = new DocumentosProyectoFormModel();
+
+    versionValidar.id = version.id;
+    versionValidar.relProyectoDocumentacionId = version.relProyectoDocumentacionId;
+    versionValidar.version = version.version;
+    versionValidar.descripcion = version.descripcion;
+    versionValidar.detalle = version.detalle;
+    versionValidar.editable = version.editable;
+    versionValidar.firmado = version.firmado;
+    versionValidar.validado = true;
+
+    const respuesta =  await this.mesaValidacionService.actualizarVersionDocumentosProyecto(versionValidar);
+
+    if(respuesta.exito){
+      this.swalService.alertaPersonalizada(true, 'Exito');
+      this.limpiarFormulario();
+      this.ngOnInit();
+    } else {
+      this.swalService.alertaPersonalizada(false, 'Error');
+    }
   }
 }

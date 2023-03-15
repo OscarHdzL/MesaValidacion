@@ -29,7 +29,7 @@ export class ModalProcesoUsuarioComponent implements OnInit {
               private swalService: SwalServices,
               private mesaValidacionService: MesaValidacionService
               ) {
-                debugger
+
                /*  if(procesoUsuario != null){
                   this.procesoUsuarioModel.id = this.procesoUsuario.id;
                   this.procesoUsuarioModel.nombre = this.procesoUsuario.nombre;

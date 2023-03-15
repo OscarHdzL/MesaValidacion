@@ -1,3 +1,17 @@
 .mensaje-texto {
     word-break: break-all;
 }
+
+/* .my-fixed-item {
+  position: fixed;
+  min-height: 120px;
+  width: 252px;
+  align-items: left;
+  word-wrap: break-word;
+  background-color: aquamarine;
+}
+ */
+
+ ::ng-deep .mat-dialog-container {
+  overflow-y: hidden !important;
+}

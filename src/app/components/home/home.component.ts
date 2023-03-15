@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
   async ngOnInit() {
 
     this.listaClientes = await this.obtenerClientes();
-    //this.changeProyecto(1);
+    this.changeProyecto(1);
 
     if(window.innerWidth <= 500) {
       this.getScreenWidth = '100%'
@@ -136,7 +136,7 @@ export class HomeComponent implements OnInit {
     this.dialog.open(ModalDocInfoComponent , {
       height: '80%',
       width: '100%',
-      maxWidth: this.getScreenWidth,
+      maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
       autoFocus: true,
       data: doc,
       disableClose: true
@@ -151,9 +151,9 @@ export class HomeComponent implements OnInit {
     doc.modoVisualizacion = true;
 
     this.dialog.open(ModalForoComponent, {
-      height: '80%',
-      width: '100%',
-      maxWidth: this.getScreenWidth,
+      //height: '80%',
+      width: '80%',
+      maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
       autoFocus: true,
       data: doc,
       disableClose: true
