@@ -1,50 +1,112 @@
 <vex-page-layout>
-    <vex-page-layout-content class="-mt-6">
-        <div class="mt-4 flex flex-col text-center justify-center gap-2 mr-5">
-            <h1 class="title mt-0 mb-1">Mesa de validación</h1>
-            <h2 class="mt-0 mb-5">Partida - Proceso - Área - Periodo</h2>
-            
-            <div class="mb-5" *ngFor="let data of dummyData">
-                <p class="inline-block font-bold">Fecha:</p><p class="inline-block">&nbsp;{{data.fecha | date}}</p>
+  <div class="p-gutter m-2" >
+    <div class="card overflow-auto mt-2">
+      <div class="mt-4 flex flex-col text-center justify-center gap-2 mr-5">
+        <h1 class="title mt-0 mb-1">Mesa de validación</h1>
+      </div>
+      <form role="form" autocomplete="off" [formGroup]="formBusqueda" novalidate>
+        <div class="flex flex-col mt-4 "></div>
+          <div class="flex flex-col xl:flex-row lg:flex-row md:flex-row gap-4 m-10">
+            <mat-form-field class="flex-auto">
+              <mat-label>Cliente</mat-label>
+              <mat-select formControlName="cliente" (valueChange)="changeCliente($event)">
+                <mat-option *ngFor="let cliente of listaClientes" [value]="cliente.id">{{cliente.nombre}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="this.cliente.hasError('required')"> El campo es requerido</mat-error>
+            </mat-form-field>
 
+            <mat-form-field class="flex-auto">
+              <mat-label>Partida</mat-label>
+              <mat-select formControlName="partida" (valueChange)="changePartida($event)">
+                <mat-option *ngFor="let partida of listaPartidas" [value]="partida.id">{{partida.descripcion }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="this.partida.hasError('required')"> El campo es requerido</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="flex-auto">
+              <mat-label>Proceso</mat-label>
+              <mat-select formControlName="proceso" (valueChange)="changeProceso($event)">
+                <mat-option *ngFor="let proceso of listaProcesos" [value]="proceso.id">{{proceso.nombre}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="this.proceso.hasError('required')"> El campo es requerido</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="flex-auto">
+              <mat-label>Periodo</mat-label>
+              <mat-select formControlName="periodo" (valueChange)="changePeriodo($event)">
+                <mat-option *ngFor="let periodo of listaPeriodos" [value]="periodo.id">{{periodo.nombre}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="this.periodo.hasError('required')"> El campo es requerido</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="flex-auto">
+              <mat-label>Proyecto</mat-label>
+              <mat-select formControlName="proyecto" (valueChange)="changeProyecto($event)">
+                <mat-option *ngFor="let proyecto of listaProyectos" [value]="proyecto.id">{{proyecto.nombre}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="this.proyecto.hasError('required')"> El campo es requerido</mat-error>
+            </mat-form-field>
+          </div>
+
+      </form>
+<hr>
+      <div class=" mt-4 flex flex-col text-center justify-center gap-2 mr-5" *ngIf="this.listaDocumentosProyecto.length > 0">
+        <h1 class="title m-5">Documentos por cubrir</h1>
+        <div class="mb-5" *ngFor="let data of listaDocumentosProyecto" >
+          <div class="flex flex-row">
+            <div class="basis-1/3">
+              <div class="flex justify-end">
+                <p class="inline-block font-bold">Versiones:</p>
+                <br>
+                <p class="inline-block">&nbsp;{{data.numeroVersiones}}</p>
                 <div class="align-middle inline-block">
-                    <img 
-                        src="../../../assets/img/down-arrow.png" 
-                        alt="line"
-                        class="w-5 h-150 ml-5 mb-1"
-                    >
-                    <button 
-                        mat-fab 
-                        color="primary" 
-                        class="mat-focus-indicator mat-fab mat-button-base mat-primary w-5 h-5 ml-5"
-                    ></button>
-                </div>
-
-                <mat-card class="inline-block ml-5 items-stretch">
-                    <mat-card-header>
-                        <mat-card-title>{{data.titulo}}</mat-card-title>
-                        <mat-card-subtitle>{{data.subtitulo}}</mat-card-subtitle>
-                    </mat-card-header>
-
-                    <mat-card-actions class="ml-5">
-                        <button 
-                            class="mat-raised-button mat-focus-indicator mat-button-base mat-primary"
-                            (click)="detalles(data.id)"
-                        >
-                            Detalles
-                        </button>
-                        <button 
-                            class="mat-button mat-focus-indicator mat-button-base mat-accent"
-                            (click)="comentarios(data.id)"
-                        >
-                            Comentarios
-                        </button>
-                    </mat-card-actions>
-                </mat-card>
+                  <img
+                      src="../../../assets/img/down-arrow.png"
+                      alt="line"
+                      class="w-5 h-150 ml-5 mb-1"
+                  >
+                  <button
+                      mat-fab
+                      color="primary"
+                      class="mat-focus-indicator mat-fab mat-button-base mat-primary w-5 h-5 ml-5"
+                  ></button>
+              </div>
+              </div>
             </div>
-        </div>
-    </vex-page-layout-content>
+            <div class="basis-2/3">
+              <mat-card class="inline-block ml-5 items-center flex flex-col w-3/4" >
+                <mat-card-header >
+                    <mat-card-title>{{data.documento}}</mat-card-title>
+                    <mat-card-subtitle>{{data.proyecto}}</mat-card-subtitle>
+                </mat-card-header>
+
+                <mat-card-actions class="ml-5 flex xl:flex-row lg:flex-row md:flex-row sm:flex-col flex-col justify-center">
+                    <button
+                        class="mat-raised-button mat-focus-indicator mat-button-base mat-primary"
+                        (click)="detalles(data)"
+                    >
+                        Detalles
+                    </button>
+                    <button
+                    *ngIf="this.data.idUltimaVersion"
+                        class="mat-button mat-focus-indicator mat-button-base mat-accent"
+                        (click)="comentarios(data)"
+                    >
+                        Comentarios
+                    </button>
+                </mat-card-actions>
+            </mat-card>
+            </div>
+          </div>
+
+
+
+      </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </vex-page-layout>
-
-
-  

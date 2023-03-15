@@ -1,0 +1,83 @@
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ProyectoFormModel, ProyectoModel } from 'src/app/modelos/proyectos.model';
+import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
+import { SwalServices } from 'src/app/servicios/sweetalert2.services';
+
+@Component({
+  selector: 'vex-modal-proyecto',
+  templateUrl: './modal-proyecto.component.html',
+  styleUrls: ['./modal-proyecto.component.scss']
+})
+export class ModalProyectoComponent implements OnInit {
+
+  formProyecto: FormGroup;
+  proyectoModel: ProyectoFormModel = new ProyectoFormModel();
+  listaSectores: any[] = [];
+
+  constructor(@Inject(MAT_DIALOG_DATA) public proyecto: ProyectoModel,
+              private dialogRef: MatDialogRef<ModalProyectoComponent>,
+              private formBuilder: FormBuilder,
+              private swalService: SwalServices,
+              private mesaValidacionService: MesaValidacionService
+              ) {
+
+                this.proyectoModel.id = this.proyecto.id;
+                this.proyectoModel.nombre = this.proyecto.nombre;
+                this.proyectoModel.tblPeriodoId = this.proyecto.tblPeriodoId;
+
+                this.iniciarForm();
+               }
+
+  async ngOnInit() {
+    //this.listaSectores = await this.obtenerSectores();
+
+    this.inicializarForm();
+  }
+
+
+  public async obtenerSectores(){
+/*     const respuesta = await this.mesaValidacionService.obtenerCatalogoSectores();
+    return respuesta; */
+  }
+
+
+  get descripcion() { return this.formProyecto.get('descripcion') }
+  get nombre() { return this.formProyecto.get('nombre') }
+
+
+
+
+
+  public iniciarForm(){
+    this.formProyecto = this.formBuilder.group({
+      nombre: ['', [Validators.required]],
+    });
+  }
+
+
+  public inicializarForm() {
+    this.nombre.setValue(this.proyectoModel.nombre);
+  }
+
+  public async guardarProyecto(){
+    //this.proyectoModel.id = 0;
+    this.proyectoModel.nombre = this.nombre.value;
+
+    const respuesta =  this.proyectoModel.id > 0 ? await this.mesaValidacionService.actualizarProyecto(this.proyectoModel) : await this.mesaValidacionService.insertarProyecto(this.proyectoModel);
+
+    if(respuesta.exito){
+      this.swalService.alertaPersonalizada(true, 'Exito');
+      this.close(true);
+    } else {
+      this.swalService.alertaPersonalizada(false, 'Error');
+    }
+
+  }
+
+  close(result: boolean) {
+    this.dialogRef.close(result);
+  }
+
+}

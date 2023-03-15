@@ -1,0 +1,43 @@
+<form role="form" autocomplete="off" [formGroup]="formPeriodo" novalidate>
+  <div class="flex items-center " style="border: none !important" mat-dialog-title >
+    <h2 class="headline m-0 flex-auto">{{this.periodoModel.id > 0 ? 'Editar periodo ' : 'Agregar periodo '}} <b>{{this.periodoModel.nombre}}</b></h2>
+    <button></button>
+    <!-- <mat-icon  svgIcon="mat:help" matTooltip="El grupo de opciones funciona como un alias o una etiqueta para una lista de opciones."></mat-icon> -->
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon svgIcon="mat:close"></mat-icon>
+    </button>
+  </div>
+  <mat-divider class="-mx-6 text-border"></mat-divider>
+  <mat-dialog-content class="px-1 ">
+    <div class="mt-4 flex flex-col gap-2  m-2">
+      <div class="flex flex-col lg:flex-row md:flex-row sm:gap-4">
+        <mat-form-field class="flex-auto">
+          <mat-label>Nombre</mat-label>
+          <input type="text" matInput formControlName="nombre" maxlength="2000">
+          <mat-error *ngIf="this.nombre.hasError('required')"> El campo es requerido</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="flex flex-col lg:flex-row md:flex-row sm:gap-4">
+        <mat-form-field class="flex-auto">
+          <mat-label>Inicio</mat-label>
+          <input type="date" matInput formControlName="inicio" maxlength="2000">
+          <mat-error *ngIf="this.inicio.hasError('required')"> El campo es requerido</mat-error>
+        </mat-form-field>
+        <mat-form-field class="flex-auto">
+          <mat-label>Fin</mat-label>
+          <input type="date" matInput formControlName="fin" maxlength="2000">
+          <mat-hint *ngIf="this.errorFechas" style="color: red">{{this.errorFechas }}</mat-hint>
+          <mat-error *ngIf="this.fin.hasError('required')"> El campo es requerido</mat-error>
+        </mat-form-field>
+
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <!-- <button type="button" mat-button (click)="close(false)">Cancelar</button> -->
+    <button type="button" mat-button mat-dialog-close>Cancelar</button>
+    <button type="submit" mat-flat-button color="primary" (click)="guardarPeriodo()" [disabled]=" formPeriodo.invalid ">{{this.periodoModel.id > 0 ? 'Editar' : 'Agregar'}}</button>
+  </mat-dialog-actions>
+
+  </form>

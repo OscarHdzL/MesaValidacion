@@ -23,6 +23,25 @@ export class ArchivosService {
           id: 2,
           version: 2,
           decripcionVersion: "Esta version se modifico de cliente"
+        },
+        {
+          id: 3,
+          version: 3,
+          decripcionVersion: "Esta version se firmó en la sala de juntas de cliente"
+        },
+        {
+          id: 4,
+          version: 4,
+          decripcionVersion: "Esta version se modifico de cliente"
+        },{
+          id: 5,
+          version: 5,
+          decripcionVersion: "Esta version se firmó en la sala de juntas de cliente"
+        },
+        {
+          id: 6,
+          version: 6,
+          decripcionVersion: "Esta version se modifico de cliente"
         }
       ]
     },
@@ -55,10 +74,10 @@ export class ArchivosService {
   }
 
   postArchivo() {
-    
+
   }
 
   updateArchivo() {
-    
+
   }
 }

@@ -1,0 +1,90 @@
+<vex-page-layout>
+  <div class="p-gutter m-2" [hidden]="!this.permiso_Listar_rol">
+    <div class="card overflow-auto mt-2">
+      <div
+        class="bg-app-bar px-6 h-16 border-b sticky left-0 flex items-center"
+      >
+        <h2
+          class="title my-0 ltr:pr-4 rtl:pl-4 ltr:mr-4 rtl:ml-4 ltr:border-r rtl:border-l sm:block flex-none"
+        >
+          Lista de roles
+        </h2>
+        <!--  <div class="bg-foreground rounded-full border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
+                <mat-icon class="icon-sm text-secondary" svgIcon="mat:search"></mat-icon>
+                <input
+                    class="px-4 py-2 border-0 outline-none w-full bg-transparent"
+                    placeholder="Buscar..."
+                    type="search">
+            </div> -->
+        <span class="flex-1"></span>
+        <button
+          (click)="openModalRol(null)"
+          *ngIf="this.permiso_Agregar_rol"
+          class="ml-4 flex-none"
+          color="primary"
+          mat-mini-fab
+          matTooltip="Agregar rol"
+          type="button"
+        >
+          <mat-icon svgIcon="mat:add"></mat-icon>
+        </button>
+      </div>
+      <table [dataSource]="this.dataSource" class="w-full" mat-table matSort>
+        <ng-container matColumnDef="descripcion">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Descripción
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row" data-label="descripcion">
+            <div>
+              {{ row.descripcion }}
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Acción
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row" data-label="acción">
+            <div class="flex justify-center">
+              <a
+                (click)="openModalRol(row)"
+                *ngIf="this.permiso_Actualizar_rol"
+                matTooltip="Editar rol"
+                class="w-10 h-10 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary/10 mr-2"
+                mat-icon-button
+              >
+                <mat-icon class="icon-sm" svgIcon="mat:edit"></mat-icon>
+              </a>
+              <a
+                (click)="eliminarRol(row)"
+                matTooltip="Eliminar rol"
+                *ngIf="this.permiso_Eliminar_rol"
+                class="w-10 h-10 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary/10 mr-2"
+                mat-icon-button
+              >
+                <mat-icon
+                  class="icon-sm"
+                  svgIcon="mat:delete_forever"
+                ></mat-icon>
+              </a>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: visibleColumns"> </mat-row>
+      </table>
+      <div
+        *ngIf="this.Rols.length == 0"
+        class="flex-auto items-center justify-center"
+      >
+        <h1 class="m-10 headline2" style="text-align: center">
+          No se encontraron roles registrados
+        </h1>
+      </div>
+      <mat-paginator #paginator [pageSizeOptions]="[5, 10, 15]"></mat-paginator>
+    </div>
+  </div>
+
+</vex-page-layout>

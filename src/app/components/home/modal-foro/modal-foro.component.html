@@ -1,5 +1,5 @@
 <div class="flex items-center" mat-dialog-title>
-    <h2 class="headline m-0 flex-auto">Foro de versión de archivo</h2>
+    <h2 class="headline m-0 flex-auto">Foro de versión de archivo <b>{{this.doc.documento}}</b></h2>
     <button></button>
     <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
       <mat-icon svgIcon="mat:close"></mat-icon>
@@ -16,35 +16,35 @@
                 <div class="w-full px-5 flex flex-col justify-between">
                     <div class="flex flex-col mt-5" *ngFor="let comentario of listaComentarios">
                         <!-- autor -->
-                        <div class="flex justify-end mb-4">
+                        <div class="flex justify-end mb-4" *ngIf="comentario.catUsuarioId == this.idUsuarioActual">
                             <div
-                                class="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl 
+                                class="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl
                                 rounded-tl-3xl rounded-tr-xl text-white"
                             >
-                                <p class="text-sm font-light">&nbsp;&nbsp;Jose Tapia - 23 Feb, 2023 - 09:00 AM</p>
+                            <p class="text-sm font-light">&nbsp;&nbsp;{{comentario.catUsuario.nombre}} - {{comentario.inclusion | date: 'yyyy-MM-dd hh:mm:ss'}}</p>
                                 <p class="mensaje-texto text-lg font-semibold">
-                                    {{comentario.decripcionVersion}}
+                                    {{comentario.comentario}}
                                 </p>
                             </div>
                         </div>
 
                         <!-- otros -->
-                        <div class="flex justify-start mb-4">
+                        <div class="flex justify-start mb-4" *ngIf="comentario.catUsuarioId != this.idUsuarioActual">
                             <div
-                                class="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl 
+                                class="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl
                                 rounded-tl-xl text-white"
                             >
-                                <p class="text-sm font-light">&nbsp;&nbsp;Jose Tapia - 23 Feb, 2023 - 09:00 AM</p>
+                                <p class="text-sm font-light">&nbsp;&nbsp;{{comentario.catUsuario.nombre}} - {{comentario.inclusion | date: 'yyyy-MM-dd hh:mm:ss'}}</p>
                                 <p class="mensaje-texto text-lg font-semibold">
-                                    {{comentario.decripcionVersion}}
+                                    {{comentario.comentario }}
                                 </p>
                             </div>
                         </div>
                     </div>
 
                     <!-- enviar -->
-                    <div class="py-5">
-                        <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+                    <div class="py-5" *ngIf="!this.doc.modoVisualizacion">
+                        <form [formGroup]="checkoutForm" (ngSubmit)="guardarComentario()">
                             <input
                                 class="w-8/12 bg-gray-300 py-5 px-3 rounded-xl inline-block"
                                 type="text"
@@ -55,25 +55,25 @@
                                 autocomplete="off"
                             />
 
-                            <button 
-                                type="button" 
-                                class="text-white bg-blue-700 hover:bg-blue-800  
-                                focus:outline-none focus:ring-blue-300 font-medium rounded-full 
-                                text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 
+                            <button
+                                type="button"
+                                class="text-white bg-blue-700 hover:bg-blue-800
+                                focus:outline-none focus:ring-blue-300 font-medium rounded-full
+                                text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600
                                 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ml-1"
-                                type="submit" 
+                                type="submit"
                             >
-                                <svg 
-                                    aria-hidden="true" 
-                                    class="w-4 h-4" 
-                                    fill="currentColor" 
-                                    viewBox="0 0 20 20" 
+                                <svg
+                                    aria-hidden="true"
+                                    class="w-4 h-4"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    <path 
-                                        fill-rule="evenodd" 
-                                        d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 
-                                        01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0
+                                        01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0
                                         010-1.414z" clip-rule="evenodd"
                                     ></path>
                                 </svg>

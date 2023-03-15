@@ -23,6 +23,28 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { ClientesComponent } from './clientes/clientes.component';
+import { ModalClienteComponent } from './clientes/modal-cliente/modal-cliente.component';
+import { PartidasComponent } from './clientes/partidas/partidas.component';
+import { ModalPartidaComponent } from './clientes/partidas/modal-partida/modal-partida.component';
+import { ProcesosComponent } from './clientes/procesos/procesos.component';
+import { ModalProcesoComponent } from './clientes/procesos/modal-proceso/modal-proceso.component';
+import { PeriodosComponent } from './clientes/periodos/periodos.component';
+import { ModalPeriodoComponent } from './clientes/periodos/modal-periodo/modal-periodo.component';
+import { DocumentosComponent } from './clientes/documentos/documentos.component';
+import { ModalDocumentoComponent } from './clientes/documentos/modal-documento/modal-documento.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { ProyectosComponent } from './clientes/proyectos/proyectos.component';
+import { ModalProyectoComponent } from './clientes/proyectos/modal-proyecto/modal-proyecto.component';
+import { AreasComponent } from './areas/areas.component';
+import { ModalAreaComponent } from './areas/modal-area/modal-area.component';
+import { RolesComponent } from './roles/roles.component';
+import { ModalRolComponent } from './roles/modal-rol/modal-rol.component';
+import { UsuariosComponent } from './usuarios/usuarios.component';
+import { ModalUsuarioComponent } from './usuarios/modal-usuario/modal-usuario.component';
+import { ProcesoUsuariosComponent } from './clientes/proceso-usuarios/proceso-usuarios.component';
+import { ModalProcesoUsuarioComponent } from './clientes/proceso-usuarios/modal-proceso-usuario/modal-proceso-usuario.component';
 @NgModule({
   declarations: [
     HomeComponent,
@@ -30,6 +52,26 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     TabHistoricoComponent,
     TabNuevaVersionComponent,
     ModalForoComponent,
+    ClientesComponent,
+    ModalClienteComponent,
+    PartidasComponent,
+    ModalPartidaComponent,
+    ProcesosComponent,
+    ModalProcesoComponent,
+    PeriodosComponent,
+    ModalPeriodoComponent,
+    DocumentosComponent,
+    ModalDocumentoComponent,
+    ProyectosComponent,
+    ModalProyectoComponent,
+    AreasComponent,
+    ModalAreaComponent,
+    RolesComponent,
+    ModalRolComponent,
+    UsuariosComponent,
+    ModalUsuarioComponent,
+    ProcesoUsuariosComponent,
+    ModalProcesoUsuarioComponent,
   ],
   imports: [
     CommonModule,
@@ -52,7 +94,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     ReactiveFormsModule,
     MatTableModule,
     MatSortModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatTooltipModule,
+    MatButtonModule,
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'es-MX'},

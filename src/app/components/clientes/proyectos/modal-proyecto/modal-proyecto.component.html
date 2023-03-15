@@ -1,0 +1,30 @@
+<form role="form" autocomplete="off" [formGroup]="formProyecto" novalidate>
+  <div class="flex items-center " style="border: none !important" mat-dialog-title >
+    <h2 class="headline m-0 flex-auto">{{this.proyectoModel.id > 0 ? 'Editar proyecto ' : 'Agregar proyecto '}} <b>{{this.proyectoModel.nombre}}</b></h2>
+    <button></button>
+    <!-- <mat-icon  svgIcon="mat:help" matTooltip="El grupo de opciones funciona como un alias o una etiqueta para una lista de opciones."></mat-icon> -->
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon svgIcon="mat:close"></mat-icon>
+    </button>
+  </div>
+  <mat-divider class="-mx-6 text-border"></mat-divider>
+  <mat-dialog-content class="px-1 ">
+    <div class="mt-4 flex flex-col gap-2  m-2">
+      <div class="flex flex-col sm:gap-4">
+        <mat-form-field class="flex-auto">
+          <mat-label>Nombre</mat-label>
+          <input type="text" matInput formControlName="nombre" maxlength="2000">
+          <mat-error *ngIf="this.nombre.hasError('required')"> El campo es requerido</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <!-- <button type="button" mat-button (click)="close(false)">Cancelar</button> -->
+    <button type="button" mat-button mat-dialog-close>Cancelar</button>
+    <button type="submit" mat-flat-button color="primary" (click)="guardarProyecto()" [disabled]=" formProyecto.invalid ">{{this.proyectoModel.id > 0 ? 'Editar' : 'Agregar'}}</button>
+  </mat-dialog-actions>
+
+  </form>

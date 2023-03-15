@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EjemploService } from 'src/app/servicios/ejemplo.service';
+/* import { EjemploService } from 'src/app/servicios/ejemplo.service'; */
 
 @Component({
   selector: 'vex-inicio',
@@ -9,16 +9,16 @@ import { EjemploService } from 'src/app/servicios/ejemplo.service';
 export class InicioComponent implements OnInit {
 
   constructor(
-    private servicioRenapo: EjemploService
+/*     private servicioRenapo: EjemploService */
   ) { }
 
   ngOnInit(): void {
-    this.obtenerCURP();
+/*     this.obtenerCURP(); */
   }
 
-  public async obtenerCURP(){
-    debugger
+/*   public async obtenerCURP(){
+
     const respuesta = await this.servicioRenapo.ObtieneDatosCurp('COCM990909HQRLNR00');
     console.log(respuesta);
-  }
+  } */
 }

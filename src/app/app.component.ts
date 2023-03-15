@@ -129,7 +129,36 @@ export class AppComponent {
             route: '/components/home',
             icon: 'mat:home',
             routerLinkActiveOptions: { exact: true }
+          },
+          {
+            type: 'link',
+            label: 'Clientes',
+            route: '/components/clientes',
+            icon: 'mat:home',
+            routerLinkActiveOptions: { exact: true }
+          },
+          {
+            type: 'link',
+            label: 'Áreas',
+            route: '/components/areas',
+            icon: 'mat:home',
+            routerLinkActiveOptions: { exact: true }
+          },
+          {
+            type: 'link',
+            label: 'Roles',
+            route: '/components/roles',
+            icon: 'mat:home',
+            routerLinkActiveOptions: { exact: true }
+          },
+          {
+            type: 'link',
+            label: 'Usuarios',
+            route: '/components/usuarios',
+            icon: 'mat:home',
+            routerLinkActiveOptions: { exact: true }
           }
+
         ]
       }
       // {

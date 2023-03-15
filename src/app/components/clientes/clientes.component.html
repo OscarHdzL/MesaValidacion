@@ -1,0 +1,140 @@
+<vex-page-layout>
+  <div class="p-gutter m-2" [hidden]="!this.permiso_Listar_cliente">
+    <div class="card overflow-auto mt-2">
+      <div
+        class="bg-app-bar px-6 h-16 border-b sticky left-0 flex items-center"
+      >
+        <h2
+          class="title my-0 ltr:pr-4 rtl:pl-4 ltr:mr-4 rtl:ml-4 ltr:border-r rtl:border-l sm:block flex-none"
+        >
+          Lista de clientes
+        </h2>
+        <!--  <div class="bg-foreground rounded-full border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
+                <mat-icon class="icon-sm text-secondary" svgIcon="mat:search"></mat-icon>
+                <input
+                    class="px-4 py-2 border-0 outline-none w-full bg-transparent"
+                    placeholder="Buscar..."
+                    type="search">
+            </div> -->
+        <span class="flex-1"></span>
+        <button
+          (click)="openModalCliente(null)"
+          *ngIf="this.permiso_Agregar_cliente"
+          class="ml-4 flex-none"
+          color="primary"
+          mat-mini-fab
+          matTooltip="Agregar cliente"
+          type="button"
+        >
+          <mat-icon svgIcon="mat:add"></mat-icon>
+        </button>
+      </div>
+      <table [dataSource]="this.dataSource" class="w-full" mat-table matSort>
+        <!--             <ng-container *ngFor="let column of columns;">
+                <ng-container *ngIf="column.property== 'clave'" [matColumnDef]="column.property">
+                <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> {{ column.label }}</th>
+                <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>{{ row.clave }}</td>
+                </ng-container>
+            </ng-container> -->
+
+        <ng-container matColumnDef="clave">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Clave
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row" data-label="clave">
+            <div >
+              {{ row.identificador }}
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="razonSocial">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            razonSocial
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row" data-label="razonSocial">
+            <div>
+              {{ row.razonSocial }}
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="nombre">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            nombre
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row" data-label="nombre">
+            <div>
+              {{ row.nombre }}
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="telefono">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            telefono
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row" data-label="telefono">
+            <div >
+              {{ row.telefono }}
+            </div>
+          </mat-cell>
+        </ng-container>
+
+
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Acción
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row" data-label="actions">
+            <div class="flex justify-center">
+              <a
+                (click)="openModalPartidasCliente(row)"
+                *ngIf="this.permiso_Listar_proyecto_cliente"
+                matTooltip="Ver partidas"
+                class="w-10 h-10 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary/10 mr-2"
+                mat-icon-button
+              >
+                <mat-icon class="icon-sm" svgIcon="mat:list"></mat-icon>
+              </a>
+              <a
+                (click)="openModalCliente(row)"
+                *ngIf="this.permiso_Actualizar_cliente"
+                matTooltip="Editar cliente"
+                class="w-10 h-10 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary/10 mr-2"
+                mat-icon-button
+              >
+                <mat-icon class="icon-sm" svgIcon="mat:edit"></mat-icon>
+              </a>
+              <a
+                (click)="eliminarCliente(row)"
+                matTooltip="Eliminar cliente"
+                *ngIf="this.permiso_Eliminar_cliente"
+                class="w-10 h-10 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary/10 mr-2"
+                mat-icon-button
+              >
+                <mat-icon
+                  class="icon-sm"
+                  svgIcon="mat:delete_forever"
+                ></mat-icon>
+              </a>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: visibleColumns"> </mat-row>
+      </table>
+      <div
+        *ngIf="this.Clientes.length == 0"
+        class="flex-auto items-center justify-center"
+      >
+        <h1 class="m-10 headline2" style="text-align: center">
+          No se encontraron Clientes registrados
+        </h1>
+      </div>
+      <mat-paginator #paginator [pageSizeOptions]="[5, 10, 15]"></mat-paginator>
+    </div>
+  </div>
+
+</vex-page-layout>
