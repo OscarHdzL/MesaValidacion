@@ -9,6 +9,8 @@ import { ProyectoFormModel, ProyectoModel } from 'src/app/modelos/proyectos.mode
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 import { ModalProyectoComponent } from './modal-proyecto/modal-proyecto.component';
+import { SesionModel } from 'src/app/modelos/sesion.model';
+import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 
 
 @Component({
@@ -17,7 +19,7 @@ import { ModalProyectoComponent } from './modal-proyecto/modal-proyecto.componen
   styleUrls: ['./proyectos.component.scss']
 })
 export class ProyectosComponent implements OnInit {
-
+  sesionUsuarioActual: SesionModel;
   permiso_Listar_proyecto = false;
   permiso_Agregar_proyecto = false;
   permiso_Actualizar_proyecto = false;
@@ -48,7 +50,8 @@ export class ProyectosComponent implements OnInit {
               private dialog: MatDialog,
               private mesaValidacionService: MesaValidacionService
               ) {
-
+                let sesion = localStorage.getItem(KeysStorageEnum.USER);
+                this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
                   //
                   this.permiso_Listar_proyecto = true;
                   this.permiso_Agregar_proyecto = true;

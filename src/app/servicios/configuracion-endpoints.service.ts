@@ -9,6 +9,8 @@ import { RespuestaModel } from '../modelos/respuesta.model';
 })
 export class ConfiguracionEndpointsService {
 url_api = 'http://198.251.71.105:8090/';
+//url_api = 'https://localhost:7017/';
+
 url_filemanager = 'http://198.251.71.105:8082/';
 
 //

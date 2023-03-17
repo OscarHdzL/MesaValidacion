@@ -1,8 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 import { PartidaFormModel, PartidaModel } from 'src/app/modelos/partidas.model';
 import { PeriodoFormModel, PeriodoModel } from 'src/app/modelos/periodos.model';
+import { SesionModel } from 'src/app/modelos/sesion.model';
 
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
@@ -14,7 +16,7 @@ import { SwalServices } from 'src/app/servicios/sweetalert2.services';
   styleUrls: ['./modal-periodo.component.scss']
 })
 export class ModalPeriodoComponent implements OnInit {
-
+  sesionUsuarioActual: SesionModel;
   formPeriodo: FormGroup;
   periodoModel: PeriodoFormModel = new PeriodoFormModel();
   listaAreas: any[] = [];
@@ -25,7 +27,8 @@ export class ModalPeriodoComponent implements OnInit {
               private swalService: SwalServices,
               private mesaValidacionService: MesaValidacionService
               ) {
-
+                let sesion = localStorage.getItem(KeysStorageEnum.USER);
+                this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
                 /* if(periodo != null){
                   this.periodoModel.id = this.periodo.id;
                   this.periodoModel.nombre = this.periodo.nombre;

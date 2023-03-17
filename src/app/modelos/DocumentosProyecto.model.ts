@@ -63,9 +63,11 @@ export class DocumentosProyectoFormModel {
   editable: string;
   firmado: string;
   validado: boolean;
+  catUsuarioId: number;
   constructor(){
     this.id = 0;
     this.relProyectoDocumentacionId = 0;
+    this.catUsuarioId = 0;
     this.version = 0;
     this.descripcion = null;
     this.detalle = null;

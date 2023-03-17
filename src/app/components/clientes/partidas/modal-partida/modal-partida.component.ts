@@ -1,7 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 import { PartidaFormModel, PartidaModel } from 'src/app/modelos/partidas.model';
+import { SesionModel } from 'src/app/modelos/sesion.model';
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 
@@ -11,7 +13,7 @@ import { SwalServices } from 'src/app/servicios/sweetalert2.services';
   styleUrls: ['./modal-partida.component.scss']
 })
 export class ModalPartidaComponent implements OnInit {
-
+  sesionUsuarioActual: SesionModel;
   formPartida: FormGroup;
   partidaModel: PartidaFormModel = new PartidaFormModel();
   listaSectores: any[] = [];
@@ -22,6 +24,9 @@ export class ModalPartidaComponent implements OnInit {
               private swalService: SwalServices,
               private mesaValidacionService: MesaValidacionService
               ) {
+
+                let sesion = localStorage.getItem(KeysStorageEnum.USER);
+    this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
 
                 /* if(partida != null){
                   this.partidaModel.id = this.partida.id;

@@ -8,7 +8,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { TableColumn } from 'src/@vex/interfaces/table-column.interface';
+import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 import { DocumentoModel } from 'src/app/modelos/documentos.model';
+import { SesionModel } from 'src/app/modelos/sesion.model';
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 
@@ -19,7 +21,7 @@ import { SwalServices } from 'src/app/servicios/sweetalert2.services';
   styleUrls: ['./documentos.component.scss']
 })
 export class DocumentosComponent implements OnInit {
-
+  sesionUsuarioActual: SesionModel;
   permiso_Listar_documento = false;
   permiso_Agregar_documento = false;
   permiso_Actualizar_documento = false;
@@ -52,6 +54,8 @@ export class DocumentosComponent implements OnInit {
               private mesaValidacionService: MesaValidacionService
               ) {
 
+                let sesion = localStorage.getItem(KeysStorageEnum.USER);
+                this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
                   //
                   this.permiso_Listar_documento = true;
                   this.permiso_Agregar_documento = true;

@@ -8,10 +8,12 @@ import {
 } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { KeysStorageEnum } from "src/app/enum/keysStorage.enum";
 import { ComentarioDocumentoProyecto, ComentarioDocumentoProyectoFormModel } from "src/app/modelos/ComentarioDocumentoProyecto.model";
 import { DocumentosProyectoModel } from "src/app/modelos/DocumentosProyecto.model";
 import { IComentarios } from "src/app/modelos/IComentarios.model";
 import { IUsuario } from "src/app/modelos/IUsuario.model";
+import { SesionModel } from "src/app/modelos/sesion.model";
 import { ForoService } from "src/app/servicios/foro.service";
 import { MesaValidacionService } from "src/app/servicios/mesa-validacion.service";
 import { SwalServices } from "src/app/servicios/sweetalert2.services";
@@ -23,6 +25,7 @@ import { UsuariosService } from "src/app/servicios/usuarios.service";
   styleUrls: ["./modal-foro.component.scss"],
 })
 export class ModalForoComponent implements OnInit, AfterViewInit {
+  sesionUsuarioActual: SesionModel;
   @ViewChild("list") list?: ElementRef<HTMLUListElement>;
   panelOpenState = false;
   listaComentarios: ComentarioDocumentoProyecto[] = [];
@@ -31,7 +34,7 @@ export class ModalForoComponent implements OnInit, AfterViewInit {
     comentario: "",
   });
 
-  idUsuarioActual = 2
+  idUsuarioActual: number;
   comentarioDocumentoProyecto: ComentarioDocumentoProyectoFormModel = new ComentarioDocumentoProyectoFormModel();
 
   constructor(
@@ -42,7 +45,9 @@ export class ModalForoComponent implements OnInit, AfterViewInit {
     private mesaValidacionService: MesaValidacionService,
     private swalService: SwalServices
   ) {
-    ;
+    let sesion = localStorage.getItem(KeysStorageEnum.USER);
+    this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
+    this.idUsuarioActual = this.sesionUsuarioActual.id;
     console.log(this.doc);
   }
 

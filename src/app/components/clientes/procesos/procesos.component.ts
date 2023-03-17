@@ -15,6 +15,8 @@ import { TableColumn } from 'src/@vex/interfaces/table-column.interface';
 
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
+import { SesionModel } from 'src/app/modelos/sesion.model';
+import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 
 @Component({
   selector: 'vex-procesos',
@@ -22,7 +24,7 @@ import { SwalServices } from 'src/app/servicios/sweetalert2.services';
   styleUrls: ['./procesos.component.scss']
 })
 export class ProcesosComponent implements OnInit {
-
+  sesionUsuarioActual: SesionModel;
   permiso_Listar_proceso = false;
   permiso_Agregar_proceso = false;
   permiso_Actualizar_proceso = false;
@@ -55,7 +57,8 @@ export class ProcesosComponent implements OnInit {
               private dialog: MatDialog,
               private mesaValidacionService: MesaValidacionService
               ) {
-
+                let sesion = localStorage.getItem(KeysStorageEnum.USER);
+                this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
                   //
                   this.permiso_Listar_proceso = true;
                   this.permiso_Agregar_proceso = true;

@@ -5,27 +5,33 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { RolesComponent } from './roles/roles.component';
+import { AuthGuard } from '../auth.guard';
 
 const routes: Routes = [
   {
     path: 'home',
-    component: HomeComponent
+    component: HomeComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'clientes',
-    component: ClientesComponent
+    component: ClientesComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'areas',
-    component: AreasComponent
+    component: AreasComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'roles',
-    component: RolesComponent
+    component: RolesComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'usuarios',
-    component: UsuariosComponent
+    component: UsuariosComponent,
+    canActivate: [AuthGuard]
   }
 ];
 

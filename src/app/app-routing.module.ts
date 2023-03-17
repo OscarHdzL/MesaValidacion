@@ -7,7 +7,7 @@ const routes: Routes = [
   {
     path: "login",
     loadChildren: () =>
-      import("./pages/pages/auth/login/login.module").then(
+      import("./login/login.module").then(
         (m) => m.LoginModule
       ),
   },
@@ -17,6 +17,17 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: "",
+    component: CustomLayoutComponent,
+    children: [
+      {
+        path: "components",
+        loadChildren: () =>
+          import("./components/components.module").then((m) => m.ComponentsModule),
+      }
+    ]
+  }
+  /* {
     path: "register",
     loadChildren: () =>
       import("./pages/pages/auth/register/register.module").then(
@@ -107,7 +118,7 @@ const routes: Routes = [
         ],
       },
     ],
-  },
+  }, */
 ];
 
 @NgModule({

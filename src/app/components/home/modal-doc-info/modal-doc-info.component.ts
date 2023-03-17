@@ -1,3 +1,4 @@
+import { RolEnum } from './../../../enum/rolEnum.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
@@ -10,6 +11,8 @@ import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 import { FileManagerService } from 'src/app/servicios/filemanager.service';
 import { ModalForoComponent } from '../modal-foro/modal-foro.component';
+import { Proceso, SesionModel } from 'src/app/modelos/sesion.model';
+import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 
 @Component({
   selector: 'vex-modal-doc-info',
@@ -17,6 +20,8 @@ import { ModalForoComponent } from '../modal-foro/modal-foro.component';
   styleUrls: ['./modal-doc-info.component.scss']
 })
 export class ModalDocInfoComponent implements OnInit {
+  sesionUsuarioActual: SesionModel;
+  procesoRolActual: Proceso;
   indexTab:number;
   panelOpenState = false
   formVersionDocumento: FormGroup
@@ -31,6 +36,14 @@ export class ModalDocInfoComponent implements OnInit {
   archivoEditableTokenEdicion = null;
   archivoFirmadoNombreEdicion = null;
   archivoFirmadoTokenEdicion = null;
+
+
+  permiso_MostrarNuevaVersion = true;
+  permiso_MostrarUltimaVersion = true;
+  permiso_MostrarHistorico = true;
+  permiso_ValidarVersion = true;
+
+
 
   @ViewChild(MatSort) sort: MatSort;
   listaVersionesDocumento: DocumentosVersionProyectoModel[] = [];
@@ -62,6 +75,32 @@ export class ModalDocInfoComponent implements OnInit {
     private filemanagerService: FileManagerService,
     private dialog: MatDialog,
   ) {
+    let sesion = localStorage.getItem(KeysStorageEnum.USER);
+    this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
+
+    if(this.sesionUsuarioActual.administrador){
+      this.permiso_MostrarNuevaVersion = true;
+      this.permiso_MostrarUltimaVersion = true;
+      this.permiso_MostrarHistorico = true;
+      this.permiso_ValidarVersion = true;
+    } else {
+      let proceso = localStorage.getItem(KeysStorageEnum.PROCESO);
+      this.procesoRolActual = JSON.parse(proceso);
+      switch(this.procesoRolActual.idRol){
+        case RolEnum.OPERADOR:
+          this.permiso_MostrarNuevaVersion = true;
+          this.permiso_MostrarUltimaVersion = true;
+          this.permiso_MostrarHistorico = true;
+          this.permiso_ValidarVersion = false;
+          break;
+        case RolEnum.VALIDADOR:
+          this.permiso_MostrarNuevaVersion = false;
+          this.permiso_MostrarUltimaVersion = false;
+          this.permiso_MostrarHistorico = true;
+          this.permiso_ValidarVersion = true;
+          break;
+      }
+    }
 
     console.log(this.documento)
     this.iniciarForm();
@@ -153,6 +192,7 @@ export class ModalDocInfoComponent implements OnInit {
     this.versionDocumentoModel.editable = this.archivoEditableToken;
     this.versionDocumentoModel.firmado = this.archivoFirmadoToken;
     this.versionDocumentoModel.validado = false;
+    this.versionDocumentoModel.catUsuarioId = this.sesionUsuarioActual.id;
 
     const respuesta =  this.versionDocumentoModel.id > 0 ? await this.mesaValidacionService.actualizarVersionDocumentosProyecto(this.versionDocumentoModel) : await this.mesaValidacionService.insertarVersionDocumentosProyecto(this.versionDocumentoModel);
 
@@ -175,6 +215,7 @@ export class ModalDocInfoComponent implements OnInit {
     this.versionDocumentoModel.editable = this.archivoEditableTokenEdicion;
     this.versionDocumentoModel.firmado = this.archivoFirmadoTokenEdicion;
     this.versionDocumentoModel.validado = false;
+    this.versionDocumentoModel.catUsuarioId = this.sesionUsuarioActual.id;
 
     const respuesta =  this.versionDocumentoModel.id > 0 ? await this.mesaValidacionService.actualizarVersionDocumentosProyecto(this.versionDocumentoModel) : await this.mesaValidacionService.insertarVersionDocumentosProyecto(this.versionDocumentoModel);
 
@@ -326,6 +367,7 @@ export class ModalDocInfoComponent implements OnInit {
     versionValidar.editable = version.editable;
     versionValidar.firmado = version.firmado;
     versionValidar.validado = true;
+    versionValidar.catUsuarioId = this.sesionUsuarioActual.id;
 
     const respuesta =  await this.mesaValidacionService.actualizarVersionDocumentosProyecto(versionValidar);
 

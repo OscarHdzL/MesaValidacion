@@ -2,7 +2,9 @@ import { MesaValidacionService } from './../../../servicios/mesa-validacion.serv
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 import { AreaFormModel, AreaModel } from 'src/app/modelos/area.model';
+import { SesionModel } from 'src/app/modelos/sesion.model';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 
 @Component({
@@ -11,7 +13,7 @@ import { SwalServices } from 'src/app/servicios/sweetalert2.services';
   styleUrls: ['./modal-area.component.scss']
 })
 export class ModalAreaComponent implements OnInit {
-
+  sesionUsuarioActual: SesionModel;
   formArea: FormGroup;
   areaModel: AreaFormModel = new AreaFormModel();
   listaSectores: any[] = [];
@@ -22,6 +24,9 @@ export class ModalAreaComponent implements OnInit {
               private swalService: SwalServices,
               private mesaValidacionService: MesaValidacionService
               ) {
+
+                let sesion = localStorage.getItem(KeysStorageEnum.USER);
+                this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
 
                 if(area != null){
                   this.areaModel.id = this.area.id;

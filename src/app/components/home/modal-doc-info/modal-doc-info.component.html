@@ -9,7 +9,7 @@
 <mat-divider class="-mx-6 text-border"></mat-divider>
 <mat-dialog-content>
   <mat-tab-group animationDuration="2ms" [(selectedIndex)]="indexTab">
-    <mat-tab label="Última versión" *ngIf="this.ultimaVersionModel">
+    <mat-tab label="Última versión" *ngIf="this.ultimaVersionModel && this.permiso_MostrarUltimaVersion">
       <div class="p-2">
         <section class="bg-white white:bg-gray-900">
           <div class="py-8 lg:py-16 px-4">
@@ -202,7 +202,7 @@
         </section>
       </div>
     </mat-tab>
-    <mat-tab label="Historico">
+    <mat-tab label="Historico" *ngIf="this.permiso_MostrarHistorico">
       <!-- <vex-tab-historico [documento]="this.objeto"></vex-tab-historico> -->
 
       <div
@@ -223,7 +223,7 @@
               <mat-icon svgIcon="mat:check_circle_outline" style="fill: greenyellow"></mat-icon>
             </a>
               <a
-                *ngIf="this.item.ultimaVersion && !this.item.validado"
+                *ngIf="this.item.ultimaVersion && !this.item.validado && this.permiso_ValidarVersion"
                 matTooltip="Validar versión"
                 mat-icon-button
                 (click)="ValidarVersion(this.item)"
@@ -283,7 +283,7 @@
         </div>
       </div>
     </mat-tab>
-    <mat-tab label="Nueva versión">
+    <mat-tab label="Nueva versión" *ngIf="this.permiso_MostrarNuevaVersion">
       <div class="p-2">
         <section class="bg-white white:bg-gray-900">
           <div class="py-8 lg:py-16 px-4">

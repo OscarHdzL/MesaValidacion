@@ -6,6 +6,8 @@ import { PartidaFormModel, PartidaModel } from 'src/app/modelos/partidas.model';
 import { ProcesoFormModel, ProcesoModel } from 'src/app/modelos/procesos.model';
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
+import { SesionModel } from 'src/app/modelos/sesion.model';
+import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 
 @Component({
   selector: 'vex-modal-proceso',
@@ -13,6 +15,7 @@ import { SwalServices } from 'src/app/servicios/sweetalert2.services';
   styleUrls: ['./modal-proceso.component.scss']
 })
 export class ModalProcesoComponent implements OnInit {
+  sesionUsuarioActual: SesionModel;
   listaAreas: AreaModel[] = [];
   formProceso: FormGroup;
   procesoModel: ProcesoFormModel = new ProcesoFormModel();
@@ -24,7 +27,8 @@ export class ModalProcesoComponent implements OnInit {
               private swalService: SwalServices,
               private mesaValidacionService: MesaValidacionService
               ) {
-
+                let sesion = localStorage.getItem(KeysStorageEnum.USER);
+                this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
                /*  if(proceso != null){
                   this.procesoModel.id = this.proceso.id;
                   this.procesoModel.nombre = this.proceso.nombre;

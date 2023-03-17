@@ -11,6 +11,8 @@ import { ClienteModel } from 'src/app/modelos/cliente.model';
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 import { ModalAreaComponent } from './modal-area/modal-area.component';
+import { SesionModel } from 'src/app/modelos/sesion.model';
+import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 
 @Component({
   selector: 'vex-areas',
@@ -18,7 +20,7 @@ import { ModalAreaComponent } from './modal-area/modal-area.component';
   styleUrls: ['./areas.component.scss']
 })
 export class AreasComponent implements OnInit {
-
+  sesionUsuarioActual: SesionModel;
   permiso_Listar_area = false;
   permiso_Agregar_area = false;
   permiso_Actualizar_area = false;
@@ -49,6 +51,9 @@ export class AreasComponent implements OnInit {
               private dialog: MatDialog,
               private mesaValidacionService: MesaValidacionService
               ) {
+                let sesion = localStorage.getItem(KeysStorageEnum.USER);
+                this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
+
                   //
                   this.permiso_Listar_area = true;
                   this.permiso_Agregar_area = true;

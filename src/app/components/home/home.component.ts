@@ -1,3 +1,5 @@
+import { ModalMovimimientosProyectoComponent } from './modal-movimimientos-proyecto/modal-movimimientos-proyecto.component';
+import { Partida, Periodo, Proceso, SesionModel, Proyecto } from './../../modelos/sesion.model';
 import { ProyectoModel } from './../../modelos/proyectos.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, HostListener, OnInit } from '@angular/core';
@@ -11,6 +13,7 @@ import { ProcesoModel } from 'src/app/modelos/procesos.model';
 import { PeriodoModel } from 'src/app/modelos/periodos.model';
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { DocumentosProyectoModel } from 'src/app/modelos/DocumentosProyecto.model';
+import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 
 @Component({
   selector: 'vex-home',
@@ -18,7 +21,9 @@ import { DocumentosProyectoModel } from 'src/app/modelos/DocumentosProyecto.mode
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
+  sesionUsuarioActual: SesionModel;
+  procesoRolActual: Proceso;
+  esAdministrador: boolean = false;
   formBusqueda: FormGroup;
   dummyData: any[]
   getScreenWidth: any
@@ -37,6 +42,9 @@ export class HomeComponent implements OnInit {
     private formBuilder: FormBuilder
   )
   {
+    let sesion = localStorage.getItem(KeysStorageEnum.USER);
+    this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
+    this.esAdministrador = this.sesionUsuarioActual.administrador ? this.sesionUsuarioActual.administrador: false;
     this.dummyData = archivoServicio.getAllArchivos()
     this.iniciarForm();
   }
@@ -44,7 +52,7 @@ export class HomeComponent implements OnInit {
   async ngOnInit() {
 
     this.listaClientes = await this.obtenerClientes();
-    this.changeProyecto(1);
+/*     this.changeProyecto(1); */
 
     if(window.innerWidth <= 500) {
       this.getScreenWidth = '100%'
@@ -70,7 +78,9 @@ export class HomeComponent implements OnInit {
   get proyecto()  {return this.formBusqueda.get('proyecto');}
 
   public async obtenerClientes(){
-    const respuesta = await this.mesaValidacionService.obtenerCatalogoClientes();
+
+
+    const respuesta = this.esAdministrador ? await this.mesaValidacionService.obtenerCatalogoClientes() : {'exito': true, 'respuesta': this.sesionUsuarioActual.clientes};
     return respuesta.exito ? respuesta.respuesta : [];
   }
 
@@ -100,7 +110,14 @@ export class HomeComponent implements OnInit {
   }
 
   public async changeCliente(idCliente){
-    this.listaPartidas = await this.obtenerPartidas(idCliente);
+
+
+    let partidasUsuario = [];
+    if(!this.esAdministrador){
+      partidasUsuario = this.sesionUsuarioActual.clientes.find(x=>x.id == idCliente).partidas as Partida[];
+    }
+
+    this.listaPartidas = this.esAdministrador ? await this.obtenerPartidas(idCliente) : partidasUsuario;
     this.listaProcesos;
     this.listaPeriodos;
     this.listaProyectos;
@@ -108,25 +125,49 @@ export class HomeComponent implements OnInit {
   }
 
   public async changePartida(idPartida){
-    this.listaProcesos = await this.obtenerProcesos(idPartida);
+
+    let procesosUsuario = []
+
+    if(!this.esAdministrador){
+      procesosUsuario = this.sesionUsuarioActual.clientes.find(x=>x.id == this.cliente.value).partidas.find(y=>y.id == idPartida).procesos as Proceso[];
+    }
+
+    this.listaProcesos =  this.esAdministrador ? await this.obtenerProcesos(idPartida): procesosUsuario;
     this.listaPeriodos;
     this.listaProyectos;
     this.listaDocumentosProyecto;
   }
 
   public async changeProceso(idProceso){
-    this.listaPeriodos = await this.obtenerPeriodos(idProceso);
+
+    let periodosUsuario = [];
+    if(!this.esAdministrador){
+      periodosUsuario = this.sesionUsuarioActual.clientes.find(x=>x.id == this.cliente.value).partidas.find(y=>y.id == this.partida.value).procesos.find(z=>z.id == idProceso).periodos as Periodo[];
+      this.procesoRolActual = this.sesionUsuarioActual.clientes.find(x=>x.id == this.cliente.value).partidas.find(y=>y.id == this.partida.value).procesos.find(z=>z.id == idProceso);
+      localStorage.removeItem('ProcesoSeleccionado');
+      //Se guarda el proceso actual para utilizar el rol en los madales;
+      localStorage.setItem('ProcesoSeleccionado',JSON.stringify(this.procesoRolActual));
+    }
+
+    this.listaPeriodos = this.esAdministrador ? await this.obtenerPeriodos(idProceso): periodosUsuario;
     this.listaProyectos;
     this.listaDocumentosProyecto;
   }
 
   public async changePeriodo(idPeriodo: number){
-    this.listaProyectos = await this.obtenerProyectos(idPeriodo);
+
+
+    let proyectosUsuario = [];
+
+    if(!this.esAdministrador){
+      proyectosUsuario = this.sesionUsuarioActual.clientes.find(x=>x.id == this.cliente.value).partidas.find(y=>y.id == this.partida.value).procesos.find(z=>z.id == this.proceso.value).periodos.find(p=>p.id == idPeriodo).proyectos as Proyecto[];
+    }
+
+    this.listaProyectos = this.esAdministrador ? await this.obtenerProyectos(idPeriodo): proyectosUsuario;
     this.listaDocumentosProyecto;
   }
 
   public async changeProyecto(idProyecto: number){
-
     this.listaDocumentosProyecto = await this.obtenerDocumentosProyecto(idProyecto);
   }
 
@@ -153,6 +194,21 @@ export class HomeComponent implements OnInit {
     this.dialog.open(ModalForoComponent, {
       //height: '80%',
       width: '80%',
+      maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
+      autoFocus: true,
+      data: doc,
+      disableClose: true
+    }).afterClosed().subscribe(result => {
+
+      console.log(result);
+      this.ngOnInit()
+    });
+  }
+
+
+  movimientos(doc: DocumentosProyectoModel) {
+    this.dialog.open(ModalMovimimientosProyectoComponent , {
+      width: '60%',
       maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
       autoFocus: true,
       data: doc,

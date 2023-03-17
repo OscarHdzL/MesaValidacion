@@ -2,7 +2,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 import { DocumentoFormModel, DocumentoModel } from 'src/app/modelos/documentos.model';
+import { SesionModel } from 'src/app/modelos/sesion.model';
 
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
@@ -13,7 +15,7 @@ import { SwalServices } from 'src/app/servicios/sweetalert2.services';
   styleUrls: ['./modal-documento.component.scss']
 })
 export class ModalDocumentoComponent implements OnInit {
-
+  sesionUsuarioActual: SesionModel;
   formDocumento: FormGroup;
   documentoModel: DocumentoFormModel = new DocumentoFormModel();
   listaSectores: any[] = [];
@@ -24,6 +26,8 @@ export class ModalDocumentoComponent implements OnInit {
               private swalService: SwalServices,
               private mesaValidacionService: MesaValidacionService
               ) {
+                let sesion = localStorage.getItem(KeysStorageEnum.USER);
+                this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
 
                 this.documentoModel.id = this.documento.id;
                 this.documentoModel.nombre = this.documento.nombre;

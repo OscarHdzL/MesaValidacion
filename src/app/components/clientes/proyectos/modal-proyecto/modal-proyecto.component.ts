@@ -1,7 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 import { ProyectoFormModel, ProyectoModel } from 'src/app/modelos/proyectos.model';
+import { SesionModel } from 'src/app/modelos/sesion.model';
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 
@@ -11,7 +13,7 @@ import { SwalServices } from 'src/app/servicios/sweetalert2.services';
   styleUrls: ['./modal-proyecto.component.scss']
 })
 export class ModalProyectoComponent implements OnInit {
-
+  sesionUsuarioActual: SesionModel;
   formProyecto: FormGroup;
   proyectoModel: ProyectoFormModel = new ProyectoFormModel();
   listaSectores: any[] = [];
@@ -22,6 +24,8 @@ export class ModalProyectoComponent implements OnInit {
               private swalService: SwalServices,
               private mesaValidacionService: MesaValidacionService
               ) {
+                let sesion = localStorage.getItem(KeysStorageEnum.USER);
+                this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
 
                 this.proyectoModel.id = this.proyecto.id;
                 this.proyectoModel.nombre = this.proyecto.nombre;

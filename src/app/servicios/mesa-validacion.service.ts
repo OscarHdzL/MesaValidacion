@@ -14,6 +14,7 @@ import { UsuarioFormModel } from '../modelos/usuario.model';
 import { ProcesoUsuarioFormModel } from '../modelos/proceso-usuario.model';
 import { DocumentosProyectoFormModel } from '../modelos/DocumentosProyecto.model';
 import { ComentarioDocumentoProyectoFormModel } from '../modelos/ComentarioDocumentoProyecto.model';
+import { LoginModel } from '../modelos/login.model';
 
 
 
@@ -26,6 +27,12 @@ export class MesaValidacionService extends ConfiguracionEndpointsService {
   constructor(public http: HttpClient) {
     super(http);
   }
+
+
+  public async Login(loginModel: LoginModel) : Promise <any> {
+    return await this.postAsync(this.url_api + 'Sesion/Login', loginModel);
+  }
+
 
 
   /* CLIENTES */
@@ -246,5 +253,10 @@ export class MesaValidacionService extends ConfiguracionEndpointsService {
   public async insertarComentariosDocumentoProyecto(doc: ComentarioDocumentoProyectoFormModel) : Promise <any> {
     return await this.postAsync(this.url_api + 'Comentario', doc);
   }
+
+ /* MOVIMIENTOS PROYECTO DOCUMENTO */
+ public async obtenerMovimientosDocumentoProyecto(doc: number) : Promise <any> {
+  return await this.getAsync(this.url_api + 'MovimientoProyectoDocumento?idRelProyectoDocumento=' + doc);
+}
 
 }

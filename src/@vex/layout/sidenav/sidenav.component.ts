@@ -9,6 +9,8 @@ import { Observable, of } from 'rxjs';
 import { UserMenuComponent } from '../../components/user-menu/user-menu.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SearchModalComponent } from '../../components/search-modal/search-modal.component';
+import { SesionModel } from 'src/app/modelos/sesion.model';
+import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 
 @Component({
   selector: 'vex-sidenav',
@@ -16,7 +18,7 @@ import { SearchModalComponent } from '../../components/search-modal/search-modal
   styleUrls: ['./sidenav.component.scss']
 })
 export class SidenavComponent implements OnInit {
-
+  sesionUsuarioActual: SesionModel;
   @Input() collapsed: boolean;
   collapsedOpen$ = this.layoutService.sidenavCollapsedOpen$;
   title$ = this.configService.config$.pipe(map(config => config.sidenav.title));
@@ -33,9 +35,86 @@ export class SidenavComponent implements OnInit {
               private layoutService: LayoutService,
               private configService: ConfigService,
               private readonly popoverService: PopoverService,
-              private readonly dialog: MatDialog) { }
+              private readonly dialog: MatDialog) {
+
+                let sesion = localStorage.getItem(KeysStorageEnum.USER);
+    this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
+
+              }
 
   ngOnInit() {
+debugger
+    if(this.sesionUsuarioActual.administrador){
+      this.navigationService.items = [
+        {
+          type: 'subheading',
+          label: 'Contenido',
+          children: [
+            {
+              type: 'link',
+              label: 'Mesa validación',
+              route: '/components/home',
+              icon: 'mat:file_copy',
+              routerLinkActiveOptions: { exact: true }
+            },
+            {
+              type: 'link',
+              label: 'Clientes',
+              route: '/components/clientes',
+              icon: 'mat:list',
+              routerLinkActiveOptions: { exact: true }
+            },
+            {
+              type: 'link',
+              label: 'Áreas',
+              route: '/components/areas',
+              icon: 'mat:list',
+              routerLinkActiveOptions: { exact: true }
+            },
+            {
+              type: 'link',
+              label: 'Roles',
+              route: '/components/roles',
+              icon: 'mat:list',
+              routerLinkActiveOptions: { exact: true }
+            },
+            {
+              type: 'link',
+              label: 'Usuarios',
+              route: '/components/usuarios',
+              icon: 'mat:list',
+              routerLinkActiveOptions: { exact: true }
+            }
+
+          ]
+        }
+      ];
+    } else {
+      this.navigationService.items = [
+        {
+          type: 'subheading',
+          label: 'Contenido',
+          children: [
+            {
+              type: 'link',
+              label: 'Mesa validación',
+              route: '/components/home',
+              icon: 'mat:file_copy',
+              routerLinkActiveOptions: { exact: true }
+            },
+            {
+              type: 'link',
+              label: 'Clientes',
+              route: '/components/clientes',
+              icon: 'mat:list',
+              routerLinkActiveOptions: { exact: true }
+            }
+          ]
+        }
+      ];
+    }
+
+    this.items = this.navigationService.items;
   }
 
   collapseOpenSidenav() {

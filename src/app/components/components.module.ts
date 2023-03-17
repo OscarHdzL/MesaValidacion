@@ -45,6 +45,7 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
 import { ModalUsuarioComponent } from './usuarios/modal-usuario/modal-usuario.component';
 import { ProcesoUsuariosComponent } from './clientes/proceso-usuarios/proceso-usuarios.component';
 import { ModalProcesoUsuarioComponent } from './clientes/proceso-usuarios/modal-proceso-usuario/modal-proceso-usuario.component';
+import { ModalMovimimientosProyectoComponent } from './home/modal-movimimientos-proyecto/modal-movimimientos-proyecto.component';
 @NgModule({
   declarations: [
     HomeComponent,
@@ -72,6 +73,7 @@ import { ModalProcesoUsuarioComponent } from './clientes/proceso-usuarios/modal-
     ModalUsuarioComponent,
     ProcesoUsuariosComponent,
     ModalProcesoUsuarioComponent,
+    ModalMovimimientosProyectoComponent,
   ],
   imports: [
     CommonModule,

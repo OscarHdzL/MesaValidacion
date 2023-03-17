@@ -14,6 +14,8 @@ import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 import { ProcesoUsuarioModel } from 'src/app/modelos/proceso-usuario.model';
 import { ModalProcesoUsuarioComponent } from './modal-proceso-usuario/modal-proceso-usuario.component';
+import { SesionModel } from 'src/app/modelos/sesion.model';
+import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 
 
 @Component({
@@ -22,7 +24,7 @@ import { ModalProcesoUsuarioComponent } from './modal-proceso-usuario/modal-proc
   styleUrls: ['./proceso-usuarios.component.scss']
 })
 export class ProcesoUsuariosComponent implements OnInit {
-
+  sesionUsuarioActual: SesionModel;
 
   permiso_Listar_procesoUsuario = false;
   permiso_Agregar_procesoUsuario = false;
@@ -55,6 +57,8 @@ Disabled
               private dialog: MatDialog,
               private mesaValidacionService: MesaValidacionService
               ) {
+                let sesion = localStorage.getItem(KeysStorageEnum.USER);
+    this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
                   //
                   this.permiso_Listar_procesoUsuario = true;
                   this.permiso_Agregar_procesoUsuario = true;

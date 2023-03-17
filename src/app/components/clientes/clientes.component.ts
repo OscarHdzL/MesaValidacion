@@ -10,6 +10,8 @@ import { ClienteModel } from 'src/app/modelos/cliente.model';
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 import { ModalClienteComponent } from './modal-cliente/modal-cliente.component';
+import { SesionModel } from 'src/app/modelos/sesion.model';
+import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 
 @Component({
   selector: 'vex-clientes',
@@ -17,7 +19,7 @@ import { ModalClienteComponent } from './modal-cliente/modal-cliente.component';
   styleUrls: ['./clientes.component.scss']
 })
 export class ClientesComponent implements OnInit {
-
+  sesionUsuarioActual: SesionModel;
   permiso_Listar_cliente = false;
   permiso_Agregar_cliente = false;
   permiso_Actualizar_cliente = false;
@@ -53,6 +55,10 @@ export class ClientesComponent implements OnInit {
               private dialog: MatDialog,
               private mesaValidacionService: MesaValidacionService
               ) {
+
+    let sesion = localStorage.getItem(KeysStorageEnum.USER);
+    this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
+
                   //
                   this.permiso_Listar_cliente = true;
                   this.permiso_Agregar_cliente = true;

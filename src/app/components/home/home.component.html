@@ -5,8 +5,7 @@
         <h1 class="title mt-0 mb-1">Mesa de validación</h1>
       </div>
       <form role="form" autocomplete="off" [formGroup]="formBusqueda" novalidate>
-        <div class="flex flex-col mt-4 "></div>
-          <div class="flex flex-col xl:flex-row lg:flex-row md:flex-row gap-4 m-10">
+          <div class="flex flex-col xl:flex-row lg:flex-row gap-2 m-5 ">
             <mat-form-field class="flex-auto">
               <mat-label>Cliente</mat-label>
               <mat-select formControlName="cliente" (valueChange)="changeCliente($event)">
@@ -18,7 +17,7 @@
             <mat-form-field class="flex-auto">
               <mat-label>Partida</mat-label>
               <mat-select formControlName="partida" (valueChange)="changePartida($event)">
-                <mat-option *ngFor="let partida of listaPartidas" [value]="partida.id">{{partida.descripcion }}</mat-option>
+                <mat-option *ngFor="let partida of listaPartidas" [value]="partida.id">{{partida.nombre }}</mat-option>
               </mat-select>
               <mat-error *ngIf="this.partida.hasError('required')"> El campo es requerido</mat-error>
             </mat-form-field>
@@ -80,16 +79,28 @@
                     <mat-card-subtitle>{{data.proyecto}}</mat-card-subtitle>
                 </mat-card-header>
 
-                <mat-card-actions class="ml-5 flex xl:flex-row lg:flex-row md:flex-row sm:flex-col flex-col justify-center">
+                <mat-card-actions class="m-3 flex xl:flex-row lg:flex-row md:flex-row sm:flex-col flex-col justify-center gap-1">
+                  <button
+                  mat-raised-button
+
+                  color="warn"
+                        (click)="movimientos(data)"
+                    >
+                        Movimientos
+                    </button>
                     <button
-                        class="mat-raised-button mat-focus-indicator mat-button-base mat-primary"
+                    mat-raised-button
+
+                        color="primary"
                         (click)="detalles(data)"
                     >
                         Detalles
                     </button>
                     <button
                     *ngIf="this.data.idUltimaVersion"
-                        class="mat-button mat-focus-indicator mat-button-base mat-accent"
+                    mat-raised-button
+
+                    color="accent"
                         (click)="comentarios(data)"
                     >
                         Comentarios

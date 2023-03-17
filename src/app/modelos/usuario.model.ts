@@ -4,6 +4,7 @@ export class UsuarioModel{
   correo: string;
   password?: any;
   activo: boolean;
+  administrador: boolean;
   inclusion: Date;
   tblDocumentoComentarios: any[];
   tblProcesoUsuarios: any[];
