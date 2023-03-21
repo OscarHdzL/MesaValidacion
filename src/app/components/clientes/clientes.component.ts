@@ -119,7 +119,6 @@ export class ClientesComponent implements OnInit {
   }
 
   openModalPartidasCliente(cliente: ClienteModel){
-
     this.dialog.open(PartidasComponent,{
       height: '50%',
       width: '100%',

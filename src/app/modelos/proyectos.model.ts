@@ -3,8 +3,8 @@ export class ProyectoModel{
   tblPeriodoId: number;
   nombre: string;
   activo: boolean;
-  inclusion: Date;
-  relProyectoDocumentacions: any[];
+  inclusion?: Date;
+  relProyectoDocumentacions?: any[];
   tblPeriodo?: any;
 }
 
