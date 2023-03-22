@@ -83,6 +83,8 @@ export class ProyectosComponent implements OnInit {
     this.matPaginatorIntl.previousPageLabel  = 'Anterior página';
     this.matPaginatorIntl.nextPageLabel = 'Siguiente página';
 
+    debugger
+    this.periodoModel
   }
 
   public async obtenerProyectos(){

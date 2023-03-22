@@ -2,7 +2,7 @@ import { ModalMovimimientosProyectoComponent } from './modal-movimimientos-proye
 import { Partida, Periodo, Proceso, SesionModel, Proyecto } from './../../modelos/sesion.model';
 import { ProyectoModel } from './../../modelos/proyectos.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ArchivosService } from 'src/app/servicios/archivos.service';
 import { ModalDocInfoComponent } from './modal-doc-info/modal-doc-info.component';
@@ -14,6 +14,7 @@ import { PeriodoModel } from 'src/app/modelos/periodos.model';
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { DocumentosProyectoModel } from 'src/app/modelos/DocumentosProyecto.model';
 import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
+import { ModalProyectoComponent } from '../clientes/proyectos/modal-proyecto/modal-proyecto.component';
 
 @Component({
   selector: 'vex-home',
@@ -34,6 +35,7 @@ export class HomeComponent implements OnInit {
   listaPeriodos: PeriodoModel[] = [];
   listaProyectos: ProyectoModel[] = [];
   listaDocumentosProyecto: DocumentosProyectoModel[] = [];
+  getIdPeriodo: number
 
   constructor(
     private dialog: MatDialog,
@@ -61,6 +63,29 @@ export class HomeComponent implements OnInit {
       this.getScreenWidth = '80%'
     }
   }
+
+  // Modal para agregar proyecto:
+  openModalProyectos(){
+    let data: ProyectoModel = {
+      id: 0,
+      tblPeriodoId: this.getIdPeriodo,
+      nombre: '',
+      activo: true
+    }
+
+    this.dialog.open(ModalProyectoComponent,{
+      height: '50%',
+      width: '100%',
+      autoFocus: true,
+      data,
+      disableClose: true,
+      maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
+    }).afterClosed().subscribe(result => {
+      console.log(result);
+      this.ngOnInit();
+    });
+  }
+
 
   public iniciarForm(){
     this.formBusqueda = this.formBuilder.group({
@@ -119,6 +144,7 @@ export class HomeComponent implements OnInit {
 
 
     let partidasUsuario = [];
+
     if(!this.esAdministrador){
       partidasUsuario = this.sesionUsuarioActual.clientes.find(x=>x.id == idCliente).partidas as Partida[];
     }
@@ -170,7 +196,7 @@ export class HomeComponent implements OnInit {
   }
 
   public async changePeriodo(idPeriodo: number){
-
+    this.getIdPeriodo = idPeriodo
 
     let proyectosUsuario = [];
 

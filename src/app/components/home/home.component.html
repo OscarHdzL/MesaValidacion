@@ -42,16 +42,29 @@
               <mat-error *ngIf="this.periodo.hasError('required')"> El campo es requerido</mat-error>
             </mat-form-field>
 
-            <mat-form-field class="flex-auto">
-              <mat-label>Proyecto</mat-label>
-              <mat-select formControlName="proyecto" (valueChange)="changeProyecto($event)">
-                <mat-option *ngIf="listaProyectos.length==0"> No se encontraron proyectos por mostrar</mat-option>
-                <mat-option *ngFor="let proyecto of listaProyectos" [value]="proyecto.id">{{proyecto.nombre}}</mat-option>
-              </mat-select>
-              <mat-error *ngIf="this.proyecto.hasError('required')"> El campo es requerido</mat-error>
-            </mat-form-field>
-          </div>
+            <button
+              class="ml-4 flex-none"
+              color="primary"
+              mat-mini-fab
+              matTooltip="Agregar proyecto"
+              type="button"
+              *ngIf="listaProyectos.length == 0; else showButton"
+              (click)="openModalProyectos()"
+            >
+              <mat-icon svgIcon="mat:add"></mat-icon>
+            </button>
 
+            <ng-template #showButton>
+              <mat-form-field class="flex-auto">
+                <mat-label>Proyecto</mat-label>
+                <mat-select formControlName="proyecto" (valueChange)="changeProyecto($event)">
+                  <mat-option *ngIf="listaProyectos.length==0"> No se encontraron proyectos por mostrar</mat-option>
+                <mat-option *ngFor="let proyecto of listaProyectos" [value]="proyecto.id">{{proyecto.nombre}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="this.proyecto.hasError('required')">El campo es requerido</mat-error>
+              </mat-form-field>
+            </ng-template>
+          </div>
       </form>
 <hr>
       <div class=" mt-4 flex flex-col text-center justify-center gap-2 mr-5" *ngIf="this.listaDocumentosProyecto.length > 0">

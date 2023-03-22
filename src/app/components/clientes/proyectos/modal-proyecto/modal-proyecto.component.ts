@@ -19,24 +19,27 @@ export class ModalProyectoComponent implements OnInit {
   listaSectores: any[] = [];
 
   constructor(@Inject(MAT_DIALOG_DATA) public proyecto: ProyectoModel,
-              private dialogRef: MatDialogRef<ModalProyectoComponent>,
-              private formBuilder: FormBuilder,
-              private swalService: SwalServices,
-              private mesaValidacionService: MesaValidacionService
-              ) {
-                let sesion = localStorage.getItem(KeysStorageEnum.USER);
-                this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
+    private dialogRef: MatDialogRef<ModalProyectoComponent>,
+    private formBuilder: FormBuilder,
+    private swalService: SwalServices,
+    private mesaValidacionService: MesaValidacionService
+  ) {
+    let sesion = localStorage.getItem(KeysStorageEnum.USER);
+    this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
 
-                this.proyectoModel.id = this.proyecto.id;
-                this.proyectoModel.nombre = this.proyecto.nombre;
-                this.proyectoModel.tblPeriodoId = this.proyecto.tblPeriodoId;
+    this.proyectoModel.id = this.proyecto.id;
+    this.proyectoModel.nombre = this.proyecto.nombre;
+    this.proyectoModel.tblPeriodoId = this.proyecto.tblPeriodoId;
 
-                this.iniciarForm();
-               }
+    this.iniciarForm();
+  }
 
   async ngOnInit() {
     //this.listaSectores = await this.obtenerSectores();
-
+    if(this.proyecto.tblPeriodoId !== 0) {
+      this.proyectoModel.tblPeriodoId = this.proyecto.tblPeriodoId
+    }
+    
     this.inicializarForm();
   }
 
@@ -65,19 +68,23 @@ export class ModalProyectoComponent implements OnInit {
     this.nombre.setValue(this.proyectoModel.nombre);
   }
 
-  public async guardarProyecto(){
-    //this.proyectoModel.id = 0;
+  public async guardarProyecto() {
     this.proyectoModel.nombre = this.nombre.value;
 
-    const respuesta =  this.proyectoModel.id > 0 ? await this.mesaValidacionService.actualizarProyecto(this.proyectoModel) : await this.mesaValidacionService.insertarProyecto(this.proyectoModel);
+    const respuesta =  this.proyectoModel.id > 0 ? await this.mesaValidacionService.actualizarProyecto(this.proyectoModel) : 
+      await this.mesaValidacionService.insertarProyecto(this.proyectoModel);
 
     if(respuesta.exito){
       this.swalService.alertaPersonalizada(true, 'Exito');
       this.close(true);
     } else {
+      if(!this.proyectoModel.tblPeriodoId) {
+        this.swalService.alertaPersonalizada(false, 'Para agregar un proyecto primero debes seleccionar los campos anteriores.')
+        return
+      }
+
       this.swalService.alertaPersonalizada(false, 'Error');
     }
-
   }
 
   close(result: boolean) {
