@@ -12,6 +12,7 @@ import { EventBlockerDirectiveDirective } from './directives/event-blocker-direc
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { LoaderInterceptor } from './loader.interceptor';
 import { NgxLoadingModule } from 'ngx-loading';
+import { NgxDocViewerModule } from 'ngx-doc-viewer';
 
 @NgModule({
   declarations: [AppComponent,  LoaderComponent],

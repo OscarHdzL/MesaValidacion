@@ -43,7 +43,7 @@ export class SidenavComponent implements OnInit {
               }
 
   ngOnInit() {
-debugger
+
     if(this.sesionUsuarioActual.administrador){
       this.navigationService.items = [
         {

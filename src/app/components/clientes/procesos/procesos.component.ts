@@ -25,11 +25,16 @@ import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 })
 export class ProcesosComponent implements OnInit {
   sesionUsuarioActual: SesionModel;
+
+  permiso_Listar_periodos = false;
+  permiso_Listar_usuarios = false;
+
   permiso_Listar_proceso = false;
   permiso_Agregar_proceso = false;
   permiso_Actualizar_proceso = false;
   permiso_Eliminar_proceso = false;
   permiso_Listar_proceso_proceso = false;
+
 
   ProcesoModel: ProcesoFormModel = new ProcesoFormModel();
   //PERMISOS_USUARIO_PANTALLA: PerfilRolModel[] = [];
@@ -40,6 +45,7 @@ export class ProcesosComponent implements OnInit {
   TIPOMATERIA: String
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  esAdministrador: boolean = false;
 
   columns: TableColumn<any>[] = [
 
@@ -59,23 +65,17 @@ export class ProcesosComponent implements OnInit {
               ) {
                 let sesion = localStorage.getItem(KeysStorageEnum.USER);
                 this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
-                  //
+
+                this.esAdministrador = this.sesionUsuarioActual.administrador ? this.sesionUsuarioActual.administrador: false;
+
+                /* if(!this.esAdministrador){ */
                   this.permiso_Listar_proceso = true;
                   this.permiso_Agregar_proceso = true;
                   this.permiso_Actualizar_proceso = true;
                   this.permiso_Eliminar_proceso = true;
                   this.permiso_Listar_proceso_proceso = true;
-                /* let permisosSesion: PerfilRolModel[] = JSON.parse(localStorage.getItem('MENU_USUARIO'));
-                if(permisosSesion.length > 0){
-                  this.PERMISOS_USUARIO_PANTALLA =  permisosSesion.filter((permiso)=>permiso.alphaModulo == PermisosModuloCatalogoProceso.Alpha_Modulo).map((Y)=>Y.alphaModuloComponente);
-                  this.permiso_Listar_proceso = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoProceso.Listar_proceso);
-                  this.permiso_Agregar_proceso = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoProceso.Agregar_proceso);
-                  this.permiso_Actualizar_proceso = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoProceso.Actualizar_proceso);
-                  this.permiso_Eliminar_proceso = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoProceso.Eliminar_proceso);
-                  this.permiso_Listar_proceso_proceso = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoProceso.Listar_proceso_proceso);
-                } else {
-                  this.PERMISOS_USUARIO_PANTALLA = [];
-                } */
+                  this.permiso_Listar_usuarios = true;
+           /*      } */
                }
 
   async ngOnInit() {

@@ -51,8 +51,9 @@ export class HomeComponent implements OnInit {
 
   async ngOnInit() {
 
+    this.sesionUsuarioActual.clientes = await this.obtenerClientesUsuarioSesion();
     this.listaClientes = await this.obtenerClientes();
-/*     this.changeProyecto(1); */
+    //this.changeProyecto(1);
 
     if(window.innerWidth <= 500) {
       this.getScreenWidth = '100%'
@@ -77,9 +78,14 @@ export class HomeComponent implements OnInit {
   get periodo ()  {return this.formBusqueda.get('periodo');}
   get proyecto()  {return this.formBusqueda.get('proyecto');}
 
+
+
+  public async obtenerClientesUsuarioSesion(){
+    const respuesta = await this.mesaValidacionService.obtenerCatalogoClientesByUsuarioSesion(this.sesionUsuarioActual.id);
+    return respuesta.exito ? respuesta.respuesta : [];
+  }
+
   public async obtenerClientes(){
-
-
     const respuesta = this.esAdministrador ? await this.mesaValidacionService.obtenerCatalogoClientes() : {'exito': true, 'respuesta': this.sesionUsuarioActual.clientes};
     return respuesta.exito ? respuesta.respuesta : [];
   }
@@ -118,10 +124,14 @@ export class HomeComponent implements OnInit {
     }
 
     this.listaPartidas = this.esAdministrador ? await this.obtenerPartidas(idCliente) : partidasUsuario;
-    this.listaProcesos;
-    this.listaPeriodos;
-    this.listaProyectos;
-    this.listaDocumentosProyecto;
+    this.partida.setValue('');
+    this.listaProcesos = [];
+    this.proceso.setValue('');
+    this.listaPeriodos = [];
+    this.periodo.setValue('');
+    this.listaProyectos = [];
+    this.proyecto.setValue('');
+    this.listaDocumentosProyecto = [];
   }
 
   public async changePartida(idPartida){
@@ -133,9 +143,12 @@ export class HomeComponent implements OnInit {
     }
 
     this.listaProcesos =  this.esAdministrador ? await this.obtenerProcesos(idPartida): procesosUsuario;
-    this.listaPeriodos;
-    this.listaProyectos;
-    this.listaDocumentosProyecto;
+    this.proceso.setValue('');
+    this.listaPeriodos = [];
+    this.periodo.setValue('');
+    this.listaProyectos = [];
+    this.proyecto.setValue('');
+    this.listaDocumentosProyecto = [];
   }
 
   public async changeProceso(idProceso){
@@ -150,8 +163,10 @@ export class HomeComponent implements OnInit {
     }
 
     this.listaPeriodos = this.esAdministrador ? await this.obtenerPeriodos(idProceso): periodosUsuario;
-    this.listaProyectos;
-    this.listaDocumentosProyecto;
+    this.periodo.setValue('');
+    this.listaProyectos = [];
+    this.proyecto.setValue('');
+    this.listaDocumentosProyecto = [];
   }
 
   public async changePeriodo(idPeriodo: number){
@@ -164,7 +179,8 @@ export class HomeComponent implements OnInit {
     }
 
     this.listaProyectos = this.esAdministrador ? await this.obtenerProyectos(idPeriodo): proyectosUsuario;
-    this.listaDocumentosProyecto;
+    this.proyecto.setValue('');
+    this.listaDocumentosProyecto = [];
   }
 
   public async changeProyecto(idProyecto: number){
@@ -208,7 +224,8 @@ export class HomeComponent implements OnInit {
 
   movimientos(doc: DocumentosProyectoModel) {
     this.dialog.open(ModalMovimimientosProyectoComponent , {
-      width: '60%',
+      height: '80%',
+      width: '100%',
       maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
       autoFocus: true,
       data: doc,

@@ -39,8 +39,12 @@ export class DocumentosVersionProyectoModel{
     version: number;
     descripcion: string;
     detalle: string;
-    editable: string;
+    editable?: string;
     firmado?: any;
+    editableNombre?: string;
+    editableExtension?: string;
+    firmadoNombre?: string;
+    firmadoExtension?: string;
     validado: boolean;
     activo: boolean;
     inclusion: Date;
@@ -50,6 +54,8 @@ export class DocumentosVersionProyectoModel{
     contadorVersiones: number;
     ultimaVersion: boolean = false;
 
+    mostrarVisualizacionEditable: boolean = false;
+    mostrarVisualizacionFirmado: boolean = false;
   }
 
 
@@ -64,6 +70,11 @@ export class DocumentosProyectoFormModel {
   firmado: string;
   validado: boolean;
   catUsuarioId: number;
+  editableNombre?: string;
+  editableExtension?: string;
+  firmadoNombre?: string;
+  firmadoExtension?: string;
+
   constructor(){
     this.id = 0;
     this.relProyectoDocumentacionId = 0;
@@ -74,6 +85,10 @@ export class DocumentosProyectoFormModel {
     //this.archivo = null;
     this.editable = null;
     this.firmado = null;
+    this.editableNombre = null;
+    this.editableExtension = null;
+    this.firmadoNombre = null;
+    this.firmadoExtension = null;
     this.validado = false;
   }
 }

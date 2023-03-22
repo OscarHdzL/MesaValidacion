@@ -1,3 +1,4 @@
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -46,6 +47,10 @@ import { ModalUsuarioComponent } from './usuarios/modal-usuario/modal-usuario.co
 import { ProcesoUsuariosComponent } from './clientes/proceso-usuarios/proceso-usuarios.component';
 import { ModalProcesoUsuarioComponent } from './clientes/proceso-usuarios/modal-proceso-usuario/modal-proceso-usuario.component';
 import { ModalMovimimientosProyectoComponent } from './home/modal-movimimientos-proyecto/modal-movimimientos-proyecto.component';
+import { DocViewerComponent } from './doc-viewer/doc-viewer.component';
+import { NgxDocViewerModule } from 'ngx-doc-viewer';
+import { ModalResponsablePartidaComponent } from './clientes/partidas/modal-responsable-partida/modal-responsable-partida.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   declarations: [
     HomeComponent,
@@ -74,6 +79,8 @@ import { ModalMovimimientosProyectoComponent } from './home/modal-movimimientos-
     ProcesoUsuariosComponent,
     ModalProcesoUsuarioComponent,
     ModalMovimimientosProyectoComponent,
+    DocViewerComponent,
+    ModalResponsablePartidaComponent,
   ],
   imports: [
     CommonModule,
@@ -99,6 +106,9 @@ import { ModalMovimimientosProyectoComponent } from './home/modal-movimimientos-
     MatPaginatorModule,
     MatTooltipModule,
     MatButtonModule,
+    NgxDocViewerModule,
+    MatAutocompleteModule,
+    MatSnackBarModule
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'es-MX'},

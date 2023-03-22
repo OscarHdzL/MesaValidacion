@@ -53,7 +53,7 @@ export class ModalMovimimientosProyectoComponent implements OnInit {
 
 
   async ngOnInit() {
-    debugger
+
     this.listaMovimientos = await this.obtenerMovimientosProyecto(this.documento.relProyectoDocumentacionId);
 
   }

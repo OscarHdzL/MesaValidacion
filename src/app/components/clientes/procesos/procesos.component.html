@@ -79,6 +79,7 @@
             </a>
             <a
               (click)="openModalProcesoUsuarios(row)"
+              *ngIf="this.permiso_Listar_usuarios"
               matTooltip="Ver usuarios"
               class="w-10 h-10 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary/10 mr-2"
               mat-icon-button

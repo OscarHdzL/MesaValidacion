@@ -78,6 +78,15 @@
                 <mat-icon class="icon-sm" svgIcon="mat:settings"></mat-icon>
               </a>
               <a
+                (click)="openModalResponsablePartida(row)"
+                *ngIf="this.permiso_Agregar_responsable_partida"
+                matTooltip="Responsable de partida"
+                class="w-10 h-10 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary/10 mr-2"
+                mat-icon-button
+              >
+                <mat-icon class="icon-sm" svgIcon="mat:person_pin"></mat-icon>
+              </a>
+              <a
                 (click)="openModalPartida(row)"
                 *ngIf="this.permiso_Actualizar_partida"
                 matTooltip="Editar partida"

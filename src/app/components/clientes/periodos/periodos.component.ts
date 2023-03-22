@@ -112,6 +112,8 @@ export class PeriodosComponent implements OnInit {
       periodo.tblProcesoId = this.procesoModel.id;
     }
 
+    periodo.tblProceso = this.procesoModel;
+
       this.dialog.open(ModalPeriodoComponent,{
         height: '45%',
         width: '100%',

@@ -41,6 +41,14 @@ export class MesaValidacionService extends ConfiguracionEndpointsService {
     return await this.getAsync(this.url_api + 'Clientes');
   }
 
+  public async obtenerCatalogoClientesByResponsablePartida(idResponsablePartida) : Promise <any> {
+    return await this.getAsync(this.url_api + 'Clientes/ByResponsablePartida?idResponsablePartida=' + idResponsablePartida);
+  }
+
+  public async obtenerCatalogoClientesByUsuarioSesion(idUsuarioSesion) : Promise <any> {
+    return await this.getAsync(this.url_api + 'Clientes/MesaValidacion?idUsuarioSesion=' + idUsuarioSesion);
+  }
+
   public async insertarCliente(cliente: ClienteFormModel) : Promise <any> {
     return await this.postAsync(this.url_api + 'Clientes', cliente);
   }
@@ -98,6 +106,10 @@ export class MesaValidacionService extends ConfiguracionEndpointsService {
   /* PERIODOS */
   public async obtenerCatalogoPeriodos(proceso: number) : Promise <any> {
     return await this.getAsync(this.url_api + 'Periodo?idProceso=' + proceso);
+  }
+
+  public async obtenerCatalogoPeriodosByPartida(idPartida: number) : Promise <any> {
+    return await this.getAsync(this.url_api + 'Periodo/ByPartida?idPartida=' + idPartida);
   }
 
   public async insertarPeriodo(periodo: PeriodoFormModel) : Promise <any> {

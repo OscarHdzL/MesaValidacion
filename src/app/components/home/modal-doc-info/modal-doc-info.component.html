@@ -246,27 +246,41 @@
             <div class="flex flex-col justify-self-center mt-3">
               <div>
                 <button
-                  class="mat-raised-button mat-focus-indicator mat-button-base mat-primary mt-2 ml-2"
+                  class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-1 px-1 rounded m-1"
                   (click)="abrirDocumento(item.editable)"
-                  *ngIf="item.editable"
+                  *ngIf="item.editable && !item.mostrarVisualizacionEditable"
                 >
                   Descargar editable
                 </button>
-              </div>
-
-              <div>
                 <button
-                  class="mat-raised-button mat-focus-indicator mat-button-base mat-primary mt-2 ml-2"
-                  (click)="abrirDocumento(item.firmado)"
-                  *ngIf="item.firmado"
+                  class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-1 px-1 rounded m-1"
+                  (click)="verDocumento(item.editable)"
+                  *ngIf="item.editable && item.mostrarVisualizacionEditable"
                 >
-                  Descargar firmado
+                  Visualizar editable
                 </button>
               </div>
 
               <div>
                 <button
-                  class="mat-raised-button mat-focus-indicator mat-button-base mat-primary mt-2 ml-2"
+                class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-1 px-1 rounded m-1"
+                  (click)="abrirDocumento(item.firmado)"
+                  *ngIf="item.firmado && !item.mostrarVisualizacionFirmado"
+                >
+                  Descargar firmado
+                </button>
+                <button
+                class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-1 px-1 rounded m-1"
+                  (click)="verDocumento(item.firmado)"
+                  *ngIf="item.firmado && item.mostrarVisualizacionFirmado"
+                >
+                  Visualizar firmado
+                </button>
+              </div>
+
+              <div>
+                <button
+                class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-1 px-1 rounded m-1"
                   (click)="comentarios(item)"
                 >
                  &nbsp; Ver comentarios &nbsp;

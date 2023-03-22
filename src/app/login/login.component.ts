@@ -52,7 +52,8 @@ export class LoginComponent implements OnInit {
 
         let sesion = res.respuesta as SesionModel
         localStorage.setItem(KeysStorageEnum.USER, JSON.stringify(sesion));
-        this.router.navigate(['components/home']);
+
+        this.router.navigate(['/components/home']);
       } else {
         this.errorMessage = true
         return

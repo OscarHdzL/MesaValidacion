@@ -13,7 +13,12 @@
       <div class="flex flex-col lg:flex-row md:flex-row sm:gap-4">
         <mat-form-field class="flex-auto">
           <mat-label>Nombre</mat-label>
-          <input type="text" matInput formControlName="nombre" maxlength="2000">
+          <input type="text" matInput formControlName="nombre" maxlength="2000" [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let periodo of filteredPeriodos | async" [value]="periodo.nombre" (onSelectionChange)="periodoSeleccionado(periodo)">
+              {{periodo.nombre + ' / ' + (periodo.inicio | date:'yyyy-MM-dd') + ' - ' + (periodo.fin | date:'yyyy-MM-dd')}}
+            </mat-option>
+          </mat-autocomplete>
           <mat-error *ngIf="this.nombre.hasError('required')"> El campo es requerido</mat-error>
         </mat-form-field>
       </div>
@@ -32,6 +37,9 @@
 
       </div>
     </div>
+
+    <br>
+
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">

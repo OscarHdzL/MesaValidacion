@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { PartidasComponent } from './partidas/partidas.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -25,6 +26,7 @@ export class ClientesComponent implements OnInit {
   permiso_Actualizar_cliente = false;
   permiso_Eliminar_cliente = false;
   permiso_Listar_proyecto_cliente = false;
+  esAdministrador: boolean = false;
 
 
   //PERMISOS_USUARIO_PANTALLA: PerfilRolModel[] = [];
@@ -56,15 +58,24 @@ export class ClientesComponent implements OnInit {
               private mesaValidacionService: MesaValidacionService
               ) {
 
-    let sesion = localStorage.getItem(KeysStorageEnum.USER);
-    this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
+      let sesion = localStorage.getItem(KeysStorageEnum.USER);
+      this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
+      this.esAdministrador = this.sesionUsuarioActual.administrador ? this.sesionUsuarioActual.administrador: false;
 
-                  //
+                if(this.esAdministrador){
                   this.permiso_Listar_cliente = true;
                   this.permiso_Agregar_cliente = true;
                   this.permiso_Actualizar_cliente = true;
                   this.permiso_Eliminar_cliente = true;
                   this.permiso_Listar_proyecto_cliente = true;
+                }else{
+                  this.permiso_Listar_cliente = true;
+                  this.permiso_Agregar_cliente = false;
+                  this.permiso_Actualizar_cliente = false;
+                  this.permiso_Eliminar_cliente = false;
+                  this.permiso_Listar_proyecto_cliente = true;
+                }
+
 
                 /* let permisosSesion: PerfilRolModel[] = JSON.parse(localStorage.getItem('MENU_USUARIO'));
                 if(permisosSesion.length > 0){
@@ -82,6 +93,8 @@ export class ClientesComponent implements OnInit {
   async ngOnInit() {
     this.Clientes = await this.obtenerClientes();
 
+
+
     this.dataSource = new MatTableDataSource<ClienteModel>(this.Clientes);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -93,8 +106,15 @@ export class ClientesComponent implements OnInit {
   }
 
   public async obtenerClientes(){
-    const respuesta = await this.mesaValidacionService.obtenerCatalogoClientes();
-    return respuesta.exito ? respuesta.respuesta : [];
+    const respuesta = this.esAdministrador ? await this.mesaValidacionService.obtenerCatalogoClientes() : await this.mesaValidacionService.obtenerCatalogoClientesByResponsablePartida(this.sesionUsuarioActual.id);
+    if(respuesta.exito){
+      if(this.esAdministrador){
+        let lista = respuesta.respuesta as ClienteModel[];
+        return lista.filter((x)=>x.usuarioResponsableId == this.sesionUsuarioActual.id);
+      }
+      return respuesta.respuesta as ClienteModel[];
+    }
+    return  [];
   }
 
   get visibleColumns() {

@@ -1,3 +1,4 @@
+import { ModalResponsablePartidaComponent } from './modal-responsable-partida/modal-responsable-partida.component';
 import { ClienteModel } from './../../../modelos/cliente.model';
 import { ProcesosComponent } from './../procesos/procesos.component';
 import { PartidaFormModel, PartidaModel } from './../../../modelos/partidas.model';
@@ -27,6 +28,8 @@ export class PartidasComponent implements OnInit {
   permiso_Actualizar_partida = false;
   permiso_Eliminar_partida = false;
   permiso_Listar_proceso_partida = false;
+  permiso_Agregar_responsable_partida= false;
+  esAdministrador: boolean = false;
 
   PartidaModel: PartidaFormModel = new PartidaFormModel();
   //PERMISOS_USUARIO_PANTALLA: PerfilRolModel[] = [];
@@ -59,12 +62,29 @@ export class PartidasComponent implements OnInit {
               ) {
                 let sesion = localStorage.getItem(KeysStorageEnum.USER);
                 this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
-                  //
+
+
+                this.esAdministrador = this.sesionUsuarioActual.administrador ? this.sesionUsuarioActual.administrador: false;
+
+                if(this.esAdministrador){
+                  this.permiso_Listar_proceso_partida = false;
                   this.permiso_Listar_partida = true;
                   this.permiso_Agregar_partida = true;
                   this.permiso_Actualizar_partida = true;
                   this.permiso_Eliminar_partida = true;
+                  this.permiso_Agregar_responsable_partida = true;
+                } else {
                   this.permiso_Listar_proceso_partida = true;
+                  this.permiso_Listar_partida = true;
+                  this.permiso_Agregar_partida = false;
+                  this.permiso_Actualizar_partida = false;
+                  this.permiso_Eliminar_partida = false;
+                  this.permiso_Agregar_responsable_partida = false;
+                }
+
+                  //
+
+
                 /* let permisosSesion: PerfilRolModel[] = JSON.parse(localStorage.getItem('MENU_USUARIO'));
                 if(permisosSesion.length > 0){
                   this.PERMISOS_USUARIO_PANTALLA =  permisosSesion.filter((permiso)=>permiso.alphaModulo == PermisosModuloCatalogoPartida.Alpha_Modulo).map((Y)=>Y.alphaModuloComponente);
@@ -81,6 +101,11 @@ export class PartidasComponent implements OnInit {
   async ngOnInit() {
 
     this.Partidas = await this.obtenerPartidas();
+
+    //USUARIO RESPONSABLE
+    if(!this.esAdministrador){
+      this.Partidas = this.Partidas.filter((x)=> x.usuarioResponsableId == this.sesionUsuarioActual.id);
+    }
 
     this.dataSource = new MatTableDataSource<PartidaModel>(this.Partidas);
     this.dataSource.paginator = this.paginator;
@@ -111,6 +136,24 @@ export class PartidasComponent implements OnInit {
     this.dialog.open(ModalPartidaComponent,{
       height: '45%',
       width: '100%',
+      autoFocus: true,
+      data: partida,
+      disableClose: true,
+      maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
+      //maxWidth: '90%'
+    }).afterClosed().subscribe(result => {
+      console.log(result);
+      this.ngOnInit();
+    });
+  }
+
+
+
+  openModalResponsablePartida(partida: PartidaModel){
+
+    this.dialog.open(ModalResponsablePartidaComponent,{
+      height: '30%',
+      width: '90%',
       autoFocus: true,
       data: partida,
       disableClose: true,

@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Observable, map, startWith } from 'rxjs';
 import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 import { PartidaFormModel, PartidaModel } from 'src/app/modelos/partidas.model';
 import { PeriodoFormModel, PeriodoModel } from 'src/app/modelos/periodos.model';
@@ -19,7 +20,8 @@ export class ModalPeriodoComponent implements OnInit {
   sesionUsuarioActual: SesionModel;
   formPeriodo: FormGroup;
   periodoModel: PeriodoFormModel = new PeriodoFormModel();
-  listaAreas: any[] = [];
+  listaPeriodos: PeriodoModel[] = [];
+  filteredPeriodos: Observable<PeriodoModel[]>;
 
   constructor(@Inject(MAT_DIALOG_DATA) public periodo: PeriodoModel,
               private dialogRef: MatDialogRef<ModalPeriodoComponent>,
@@ -48,13 +50,41 @@ export class ModalPeriodoComponent implements OnInit {
                }
 
   async ngOnInit() {
-    //this.listaAreas = await this.obtenerAreas();
-
+    this.listaPeriodos = await this.obtenerPeriodos();
     this.inicializarForm();
+
+
+    this.filteredPeriodos = this.nombre.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || '')),
+    );
+  }
+
+  public async periodoSeleccionado(periodo: PeriodoModel){
+
+    console.log(periodo);
+    this.inicio.setValue(periodo.inicio.substring(0,10));
+    this.fin.setValue(periodo.fin.substring(0,10));
+
   }
 
 
 
+  private _filter(value: string): PeriodoModel[] {
+    const filterValue = this._normalizeValue(value);
+    return this.listaPeriodos.filter(periodo => this._normalizeValue(periodo.nombre).includes(filterValue));
+  }
+
+  private _normalizeValue(value: string): string {
+    return value.toLowerCase().replace(/\s/g, '');
+  }
+
+
+  public async obtenerPeriodos(){
+
+    const respuesta = await this.mesaValidacionService.obtenerCatalogoPeriodosByPartida(this.periodo.tblProceso.tblPartidasId);
+    return respuesta.exito ? respuesta.respuesta : [];
+  }
 
   dateLessThan(from: string, to: string) {
     return (group: FormGroup): {[key: string]: any} => {

@@ -1,3 +1,4 @@
+import { ProcesoModel } from './procesos.model';
 export class PeriodoModel{
   id: number;
   tblProcesoId: number;
@@ -7,7 +8,7 @@ export class PeriodoModel{
   activo: boolean;
   inclusion: Date;
   tblDocumentacions: any[];
-  tblProceso?: any;
+  tblProceso?: ProcesoModel;
   tblProyectos: any[];
 }
 

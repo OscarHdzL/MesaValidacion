@@ -1,3 +1,4 @@
+import { DocViewerComponent } from './doc-viewer/doc-viewer.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { AreasComponent } from './areas/areas.component';
 import { ClientesComponent } from './clientes/clientes.component';
@@ -31,6 +32,11 @@ const routes: Routes = [
   {
     path: 'usuarios',
     component: UsuariosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'viewer',
+    component: DocViewerComponent,
     canActivate: [AuthGuard]
   }
 ];

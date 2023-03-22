@@ -35,6 +35,7 @@ export class ModalClienteComponent implements OnInit {
                   this.clienteModel.rfc = this.cliente.rfc;
                   this.clienteModel.telefono = this.cliente.telefono;
                   this.clienteModel.correo = this.cliente.correo;
+                  this.clienteModel.usuarioResponsableId = this.cliente.usuarioResponsableId;
                 } else {
                   this.clienteModel = new ClienteFormModel();
                 }
@@ -96,6 +97,7 @@ export class ModalClienteComponent implements OnInit {
     this.clienteModel.telefono = this.telefono.value;
     this.clienteModel.correo = this.correo.value;
     this.clienteModel.activo = true;
+    this.clienteModel.usuarioResponsableId = this.sesionUsuarioActual.id;
 
     const respuesta =  this.clienteModel.id > 0 ? await this.mesaValidacionService.actualizarCliente(this.clienteModel) : await this.mesaValidacionService.insertarCliente(this.clienteModel);
 

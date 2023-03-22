@@ -1,3 +1,4 @@
+import { DocViewerComponent } from './../../doc-viewer/doc-viewer.component';
 import { RolEnum } from './../../../enum/rolEnum.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
@@ -27,15 +28,21 @@ export class ModalDocInfoComponent implements OnInit {
   formVersionDocumento: FormGroup
   formVersionDocumentoEdicion: FormGroup
   titulo = "Nueva versión";
+
   archivoEditableNombre = null;
   archivoEditableToken = null;
+  archivoEditableExtension = null;
   archivoFirmadoNombre = null;
   archivoFirmadoToken = null;
+  archivoFirmadoExtension = null;
 
   archivoEditableNombreEdicion = null;
   archivoEditableTokenEdicion = null;
+  archivoEditableExtensionEdicion = null;
+
   archivoFirmadoNombreEdicion = null;
   archivoFirmadoTokenEdicion = null;
+  archivoFirmadoExtensionEdicion = null;
 
 
   permiso_MostrarNuevaVersion = true;
@@ -43,7 +50,7 @@ export class ModalDocInfoComponent implements OnInit {
   permiso_MostrarHistorico = true;
   permiso_ValidarVersion = true;
 
-
+  formatosVisualizacion = ['docx','doc','ppt','pptx','pdf','jpg', 'jpeg','xlsx','xls','DOCX','DOC','PPT','PPTX','PDF','JPG', 'JPEG','XLSX','XLS'];
 
   @ViewChild(MatSort) sort: MatSort;
   listaVersionesDocumento: DocumentosVersionProyectoModel[] = [];
@@ -113,6 +120,9 @@ export class ModalDocInfoComponent implements OnInit {
     this.listaVersionesDocumento = await this.obtenerVersionesDocumentoProyecto(this.documento.relProyectoDocumentacionId);
     this.listaVersionesDocumento.forEach((x)=>{
       x.id == this.documento.idUltimaVersion ? x.ultimaVersion = true : x.ultimaVersion = false
+      //PARA MOSTRAR VISUALIZACION O DESCARGA
+      this.formatosVisualizacion.includes(x.editableExtension) ? x.mostrarVisualizacionEditable = true : x.mostrarVisualizacionEditable = false;
+      this.formatosVisualizacion.includes(x.firmadoExtension) ? x.mostrarVisualizacionFirmado = true : x.mostrarVisualizacionFirmado = false;
     });
 
     this.dataSource = new MatTableDataSource<any>(this.listaVersionesDocumento);
@@ -167,11 +177,12 @@ export class ModalDocInfoComponent implements OnInit {
       this.descripcionEdicion.setValue(this.ultimaVersionModel.descripcion);
       this.detalleEdicion.setValue(this.ultimaVersionModel.detalle);
 
-      this.archivoEditableNombreEdicion = this.ultimaVersionModel.editable;
+      this.archivoEditableNombreEdicion = this.ultimaVersionModel.editableNombre;
       this.archivoEditableTokenEdicion = this.ultimaVersionModel.editable;
-
-      this.archivoFirmadoNombreEdicion = this.ultimaVersionModel.firmado;
+      this.archivoEditableExtensionEdicion = this.ultimaVersionModel.editableExtension;
+      this.archivoFirmadoNombreEdicion = this.ultimaVersionModel.firmadoNombre;
       this.archivoFirmadoTokenEdicion = this.ultimaVersionModel.firmado;
+      this.archivoFirmadoExtensionEdicion = this.ultimaVersionModel.firmadoExtension;
     }
 
   }
@@ -193,6 +204,10 @@ export class ModalDocInfoComponent implements OnInit {
     this.versionDocumentoModel.firmado = this.archivoFirmadoToken;
     this.versionDocumentoModel.validado = false;
     this.versionDocumentoModel.catUsuarioId = this.sesionUsuarioActual.id;
+    this.versionDocumentoModel.editableNombre = this.archivoEditableNombre;
+    this.versionDocumentoModel.editableExtension = this.archivoEditableExtension;
+    this.versionDocumentoModel.firmadoNombre = this.archivoFirmadoNombre;
+    this.versionDocumentoModel.firmadoExtension = this.archivoFirmadoExtension;
 
     const respuesta =  this.versionDocumentoModel.id > 0 ? await this.mesaValidacionService.actualizarVersionDocumentosProyecto(this.versionDocumentoModel) : await this.mesaValidacionService.insertarVersionDocumentosProyecto(this.versionDocumentoModel);
 
@@ -207,6 +222,7 @@ export class ModalDocInfoComponent implements OnInit {
   }
 
   async editarVersionDocumento(){
+
     this.versionDocumentoModel.id = this.ultimaVersionModel.id;
     this.versionDocumentoModel.relProyectoDocumentacionId = this.ultimaVersionModel.relProyectoDocumentacionId;
     this.versionDocumentoModel.version = this.ultimaVersionModel.version;
@@ -216,6 +232,11 @@ export class ModalDocInfoComponent implements OnInit {
     this.versionDocumentoModel.firmado = this.archivoFirmadoTokenEdicion;
     this.versionDocumentoModel.validado = false;
     this.versionDocumentoModel.catUsuarioId = this.sesionUsuarioActual.id;
+    this.versionDocumentoModel.editableNombre = this.archivoEditableNombreEdicion;
+    this.versionDocumentoModel.editableExtension = this.archivoEditableExtensionEdicion;
+    this.versionDocumentoModel.firmadoNombre = this.archivoFirmadoNombreEdicion;
+    this.versionDocumentoModel.firmadoExtension = this.archivoFirmadoExtensionEdicion;
+
 
     const respuesta =  this.versionDocumentoModel.id > 0 ? await this.mesaValidacionService.actualizarVersionDocumentosProyecto(this.versionDocumentoModel) : await this.mesaValidacionService.insertarVersionDocumentosProyecto(this.versionDocumentoModel);
 
@@ -230,6 +251,13 @@ export class ModalDocInfoComponent implements OnInit {
 
   public limpiarFormulario(){
     this.formVersionDocumento.reset();
+
+    this.archivoEditableNombre = null;
+    this.archivoEditableToken = null;
+    this.archivoEditableExtension = null;
+    this.archivoFirmadoNombre = null;
+    this.archivoFirmadoToken = null;
+    this.archivoFirmadoExtension = null;
   }
 
 
@@ -244,8 +272,10 @@ export class ModalDocInfoComponent implements OnInit {
       const respuesta = await this.filemanagerService.cargarArchivo(formData);
 
       if(respuesta.exito){
+
         this.archivoEditableNombre = event.target.files[0].name;
         this.archivoEditableToken = respuesta.anotacion;
+        this.archivoEditableExtension = this.archivoEditableNombre.split('.')[1];
       } else {
         this.swalService.alertaPersonalizada(false, 'No se pudo cargar el archivo');
       }
@@ -262,6 +292,7 @@ export class ModalDocInfoComponent implements OnInit {
      if(respuesta.exito){
        this.archivoFirmadoNombre = event.target.files[0].name;
        this.archivoFirmadoToken = respuesta.anotacion;
+       this.archivoFirmadoExtension = this.archivoFirmadoNombre.split('.')[1];
      } else {
        this.swalService.alertaPersonalizada(false, 'No se pudo cargar el archivo');
      }
@@ -281,8 +312,11 @@ export class ModalDocInfoComponent implements OnInit {
       const respuesta = await this.filemanagerService.cargarArchivo(formData);
 
       if(respuesta.exito){
+
         this.archivoEditableNombreEdicion = event.target.files[0].name;
         this.archivoEditableTokenEdicion = respuesta.anotacion;
+        this.archivoEditableExtensionEdicion = this.archivoEditableNombreEdicion.split('.')[1];
+
       } else {
         this.swalService.alertaPersonalizada(false, 'No se pudo cargar el archivo');
       }
@@ -297,8 +331,10 @@ export class ModalDocInfoComponent implements OnInit {
      formData.append('file', event.target.files[0]);
      const respuesta = await this.filemanagerService.cargarArchivo(formData);
      if(respuesta.exito){
+
        this.archivoFirmadoNombreEdicion = event.target.files[0].name;
        this.archivoFirmadoTokenEdicion = respuesta.anotacion;
+       this.archivoFirmadoExtensionEdicion = this.archivoFirmadoNombreEdicion.split('.')[1];
      } else {
        this.swalService.alertaPersonalizada(false, 'No se pudo cargar el archivo');
      }
@@ -355,6 +391,10 @@ export class ModalDocInfoComponent implements OnInit {
 
   }
 
+
+
+
+
   async ValidarVersion(version: DocumentosVersionProyectoModel){
 
     let versionValidar = new DocumentosProyectoFormModel();
@@ -378,5 +418,26 @@ export class ModalDocInfoComponent implements OnInit {
     } else {
       this.swalService.alertaPersonalizada(false, 'Error');
     }
+  }
+
+
+
+
+  async verDocumento(token: string) {
+
+    let url = await this.filemanagerService.obtenerRutaArchivo(token);
+    //window.open(url,'_blank');
+
+    this.dialog.open(DocViewerComponent, {
+      height: '80%',
+      width: '100%',
+      maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
+      autoFocus: true,
+      data: url,
+      disableClose: true
+    }).afterClosed().subscribe(result => {
+      console.log(result);
+      this.ngOnInit()
+    });
   }
 }

@@ -9,6 +9,7 @@
             <mat-form-field class="flex-auto">
               <mat-label>Cliente</mat-label>
               <mat-select formControlName="cliente" (valueChange)="changeCliente($event)">
+                <mat-option *ngIf="listaClientes.length==0"> No se encontraron clientes por mostrar</mat-option>
                 <mat-option *ngFor="let cliente of listaClientes" [value]="cliente.id">{{cliente.nombre}}</mat-option>
               </mat-select>
               <mat-error *ngIf="this.cliente.hasError('required')"> El campo es requerido</mat-error>
@@ -17,6 +18,7 @@
             <mat-form-field class="flex-auto">
               <mat-label>Partida</mat-label>
               <mat-select formControlName="partida" (valueChange)="changePartida($event)">
+                <mat-option *ngIf="listaPartidas.length==0"> No se encontraron partidas por mostrar</mat-option>
                 <mat-option *ngFor="let partida of listaPartidas" [value]="partida.id">{{partida.nombre }}</mat-option>
               </mat-select>
               <mat-error *ngIf="this.partida.hasError('required')"> El campo es requerido</mat-error>
@@ -25,6 +27,7 @@
             <mat-form-field class="flex-auto">
               <mat-label>Proceso</mat-label>
               <mat-select formControlName="proceso" (valueChange)="changeProceso($event)">
+                <mat-option *ngIf="listaProcesos.length==0"> No se encontraron procesos por mostrar</mat-option>
                 <mat-option *ngFor="let proceso of listaProcesos" [value]="proceso.id">{{proceso.nombre}}</mat-option>
               </mat-select>
               <mat-error *ngIf="this.proceso.hasError('required')"> El campo es requerido</mat-error>
@@ -33,6 +36,7 @@
             <mat-form-field class="flex-auto">
               <mat-label>Periodo</mat-label>
               <mat-select formControlName="periodo" (valueChange)="changePeriodo($event)">
+                <mat-option *ngIf="listaPeriodos.length==0"> No se encontraron periodos por mostrar</mat-option>
                 <mat-option *ngFor="let periodo of listaPeriodos" [value]="periodo.id">{{periodo.nombre}}</mat-option>
               </mat-select>
               <mat-error *ngIf="this.periodo.hasError('required')"> El campo es requerido</mat-error>
@@ -41,6 +45,7 @@
             <mat-form-field class="flex-auto">
               <mat-label>Proyecto</mat-label>
               <mat-select formControlName="proyecto" (valueChange)="changeProyecto($event)">
+                <mat-option *ngIf="listaProyectos.length==0"> No se encontraron proyectos por mostrar</mat-option>
                 <mat-option *ngFor="let proyecto of listaProyectos" [value]="proyecto.id">{{proyecto.nombre}}</mat-option>
               </mat-select>
               <mat-error *ngIf="this.proyecto.hasError('required')"> El campo es requerido</mat-error>

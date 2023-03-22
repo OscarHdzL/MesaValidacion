@@ -9,11 +9,13 @@ export class ClienteModel{
   activo: boolean;
   inclusion: Date;
   tblPartida: any[];
+  usuarioResponsableId: number;
 }
 
 
 export class ClienteFormModel {
   id: number;
+  usuarioResponsableId: number;
   identificador: string;
   nombre: string;
   razonSocial: string;
@@ -22,8 +24,10 @@ export class ClienteFormModel {
   //contacto: string;
   correo: string;
   activo: boolean;
+
   constructor(){
     this.id = 0;
+    this.usuarioResponsableId = 0;
     this.identificador = null;
     this.nombre = null;
     this.razonSocial = null;
