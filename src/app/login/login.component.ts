@@ -4,7 +4,7 @@ import { MesaValidacionService } from './../servicios/mesa-validacion.service';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { fadeInUp400ms } from '../../@vex/animations/fade-in-up.animation';
 
 import { ILoginRespuesta } from '../modelos/ILogin.model';
@@ -46,20 +46,29 @@ export class LoginComponent implements OnInit {
     this.errorMessage = false
 
     try {
-      let res: ILoginRespuesta = await this.authService.Login(this.form.value as LoginModel)
+      let res = await this.authService.Login(this.form.value as LoginModel)
 
       if(res.exito == true) {
 
         let sesion = res.respuesta as SesionModel
         localStorage.setItem(KeysStorageEnum.USER, JSON.stringify(sesion));
-
         this.router.navigate(['/components/inicio']);
+        this.snackbar.open('Acceso correcto', null, {
+          duration: 3000,
+          panelClass: 'center'
+        });
       } else {
         this.errorMessage = true
+        this.snackbar.open(res.mensaje, null, {
+          duration: 3000
+        });
         return
       }
     } catch (error) {
-      this.errorMessage = true
+      this.errorMessage = true;
+      this.snackbar.open(error.error, null, {
+        duration: 3000
+      });
       return
     }
 

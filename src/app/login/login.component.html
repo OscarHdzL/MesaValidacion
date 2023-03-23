@@ -28,16 +28,11 @@
           <mat-hint>Clic en el ojo para ver contraseña</mat-hint>
           <mat-error *ngIf="form.get('password').hasError('required')">La contraseña es requerida</mat-error>
         </mat-form-field>
-
-        <p *ngIf="errorMessage" class="text-red-400">
-          Usuario o contraseña incorrectos.
-        </p>
       </div>
 
-      <!-- <div class="flex items-center justify-between">
-        <mat-checkbox class="caption" color="primary">Remember Me</mat-checkbox>
-        <a [routerLink]="['/forgot-password']" class="caption">Forgot Password?</a>
-      </div> -->
+      <div class="flex justify-end">
+        <a [routerLink]="['reset-password']" class="caption">Olvidé la contraseña</a>
+      </div>
 
       <button [disabled]="!form.valid" (click)="login()" color="primary" mat-raised-button type="button">
         Ingresar

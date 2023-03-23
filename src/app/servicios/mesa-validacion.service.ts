@@ -33,6 +33,10 @@ export class MesaValidacionService extends ConfiguracionEndpointsService {
     return await this.postAsync(this.url_api + 'Sesion/Login', loginModel);
   }
 
+  public async ResetPassword(loginModel: LoginModel) : Promise <any> {
+    return await this.postAsync(this.url_api + 'Sesion/ResetPass', loginModel);
+  }
+
 
 
   /* CLIENTES */

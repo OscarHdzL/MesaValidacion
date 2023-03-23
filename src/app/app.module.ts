@@ -13,6 +13,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { LoaderInterceptor } from './loader.interceptor';
 import { NgxLoadingModule } from 'ngx-loading';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [AppComponent,  LoaderComponent],
@@ -24,7 +25,8 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
     // Vex
     VexModule,
     CustomLayoutModule,
-    NgxLoadingModule.forRoot({})
+    NgxLoadingModule.forRoot({}),
+    MatSnackBarModule
   ],
   providers: [{provide:LocationStrategy, useClass:HashLocationStrategy},
     {
