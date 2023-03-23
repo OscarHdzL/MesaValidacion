@@ -46,7 +46,7 @@ export class ModalMovimimientosProyectoComponent implements OnInit {
     let sesion = localStorage.getItem(KeysStorageEnum.USER);
     this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
 
-    console.log(this.documento)
+
 
    }
 

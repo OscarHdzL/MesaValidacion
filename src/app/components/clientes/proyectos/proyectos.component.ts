@@ -133,7 +133,7 @@ if(this.esAdministrador){
         maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
         //maxWidth: '90%'
       }).afterClosed().subscribe(result => {
-        console.log(result);
+
         this.ngOnInit();
       });
   }
@@ -151,7 +151,7 @@ openModalProyectos(proyecto: ProyectoModel){
     disableClose: true,
     maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
   }).afterClosed().subscribe(result => {
-    console.log(result);
+
     this.ngOnInit();
   });
 }

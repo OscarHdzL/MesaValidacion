@@ -15,6 +15,8 @@ import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service
 import { DocumentosProyectoModel } from 'src/app/modelos/DocumentosProyecto.model';
 import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 import { ModalProyectoComponent } from '../clientes/proyectos/modal-proyecto/modal-proyecto.component';
+import { Router } from '@angular/router';
+import { Modulos } from 'src/app/enum/PermisosPantallas.enum';
 
 @Component({
   selector: 'vex-home',
@@ -36,12 +38,14 @@ export class HomeComponent implements OnInit {
   listaProyectos: ProyectoModel[] = [];
   listaDocumentosProyecto: DocumentosProyectoModel[] = [];
   getIdPeriodo: number
+  PERMISOS_SIDEBAR: string[] = [];
 
   constructor(
     private dialog: MatDialog,
     public archivoServicio: ArchivosService,
     private mesaValidacionService: MesaValidacionService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router,
   )
   {
     let sesion = localStorage.getItem(KeysStorageEnum.USER);
@@ -52,14 +56,25 @@ export class HomeComponent implements OnInit {
   }
 
   async ngOnInit() {
-    debugger
+
     //SE SOBREESCRIBE EL VALOR POR SI HUBO CAMBIOS EN LAS FUNCIONES
     this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+
+    this.PERMISOS_SIDEBAR = this.sesionUsuarioActual.funciones.filter((x)=> x.modulo == 'Sidebar' && x.activo == true).map((Y)=>Y.funcion);
+
     //SE SOBREESCRIBE EL VALOR POR SI HUBO CAMBIOS EN LOS CLIENTES
     this.sesionUsuarioActual.clientes = await this.obtenerClientesUsuarioSesion();
     localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
+
+    if(!this.PERMISOS_SIDEBAR.includes(Modulos.MESA_VALIDACION)){
+      console.log('NO TIENE ACCESO A LA PANTALLA MESA VALIDACION');
+      this.router.navigate(['/components/inicio']);
+      return;
+    }
+
+
     this.listaClientes = await this.obtenerClientes();
-    this.changeProyecto(22);
+    //this.changeProyecto(22);
 
     if(window.innerWidth <= 500) {
       this.getScreenWidth = '100%'
@@ -85,7 +100,7 @@ export class HomeComponent implements OnInit {
       disableClose: true,
       maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
     }).afterClosed().subscribe(result => {
-      console.log(result);
+
       this.ngOnInit();
     });
   }
@@ -231,7 +246,7 @@ export class HomeComponent implements OnInit {
       data: doc,
       disableClose: true
     }).afterClosed().subscribe(async result => {
-      console.log(result);
+
       //await this.ngOnInit();
       //Se recarga el listado de documento del proyecto
       await this.changeProyecto(this.proyecto.value);
@@ -251,7 +266,7 @@ export class HomeComponent implements OnInit {
       disableClose: true
     }).afterClosed().subscribe(async result => {
 
-      console.log(result);
+
       //this.ngOnInit()
       //Se recarga el listado de documento del proyecto
       await this.changeProyecto(this.proyecto.value);
@@ -268,7 +283,7 @@ export class HomeComponent implements OnInit {
       data: doc,
       disableClose: true
     }).afterClosed().subscribe(async result => {
-      console.log(result);
+
       //this.ngOnInit()
       //Se recarga el listado de documento del proyecto
       await this.changeProyecto(this.proyecto.value);

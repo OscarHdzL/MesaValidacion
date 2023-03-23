@@ -111,7 +111,6 @@ export class ModalFuncionUsuarioComponent implements OnInit {
 
 public async actualizarFuncion(funcion: FuncionModel, evento: any ){
 
-  console.log("Evento: ", evento);
   const fun: FuncionUsuarioFormModel = {
     id: funcion.id,
     catUsuarioId:   funcion.idUsuario,

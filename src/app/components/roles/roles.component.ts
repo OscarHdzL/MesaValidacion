@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TableColumn } from 'src/@vex/interfaces/table-column.interface';
 import { RolModel } from 'src/app/modelos/rol.model';
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
@@ -11,6 +11,7 @@ import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 import { ModalRolComponent } from './modal-rol/modal-rol.component';
 import { SesionModel } from 'src/app/modelos/sesion.model';
 import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
+import { Modulos } from 'src/app/enum/PermisosPantallas.enum';
 
 @Component({
   selector: 'vex-roles',
@@ -28,6 +29,7 @@ export class RolesComponent implements OnInit {
 
   //PERMISOS_USUARIO_PANTALLA: PerfilRolModel[] = [];
   PERMISOS_USUARIO_PANTALLA: string[] = [];
+  PERMISOS_SIDEBAR: string[] = [];
 
   Rols: RolModel[] = [];
   dataSource:any;
@@ -46,7 +48,8 @@ export class RolesComponent implements OnInit {
               private swalService: SwalServices,
               private route: ActivatedRoute,
               private dialog: MatDialog,
-              private mesaValidacionService: MesaValidacionService
+              private mesaValidacionService: MesaValidacionService,
+              private router: Router,
               ) {
 
                 let sesion = localStorage.getItem(KeysStorageEnum.USER);
@@ -73,7 +76,17 @@ export class RolesComponent implements OnInit {
 
   async ngOnInit() {
     this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    this.PERMISOS_SIDEBAR = this.sesionUsuarioActual.funciones.filter((x)=> x.modulo == 'Sidebar' && x.activo == true).map((Y)=>Y.funcion);
     localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
+
+
+    if(!this.PERMISOS_SIDEBAR.includes(Modulos.ROLES)){
+      console.log('NO TIENE ACCESO A LA PANTALLA ROLES');
+      this.router.navigate(['/components/inicio']);
+      return;
+    }
+
+
     this.Rols = await this.obtenerRols();
 
     this.dataSource = new MatTableDataSource<RolModel>(this.Rols);
@@ -113,7 +126,7 @@ export class RolesComponent implements OnInit {
         maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
         //maxWidth: '90%'
       }).afterClosed().subscribe(result => {
-        console.log(result);
+
         this.ngOnInit();
       });
   }

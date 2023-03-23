@@ -140,7 +140,7 @@ export class DocumentosComponent implements OnInit {
         maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
         //maxWidth: '90%'
       }).afterClosed().subscribe(result => {
-        console.log(result);
+
         this.ngOnInit();
       });
   }

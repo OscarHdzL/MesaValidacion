@@ -149,7 +149,7 @@ export class PartidasComponent implements OnInit {
       maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
       //maxWidth: '90%'
     }).afterClosed().subscribe(result => {
-      console.log(result);
+
       this.ngOnInit();
     });
   }
@@ -167,7 +167,7 @@ export class PartidasComponent implements OnInit {
       maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
       //maxWidth: '90%'
     }).afterClosed().subscribe(result => {
-      console.log(result);
+
       this.ngOnInit();
     });
   }
@@ -182,7 +182,7 @@ export class PartidasComponent implements OnInit {
       disableClose: true,
       maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
     }).afterClosed().subscribe(result => {
-      console.log(result);
+
       this.ngOnInit();
     });
 }

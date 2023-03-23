@@ -12,6 +12,7 @@ import { SearchModalComponent } from '../../components/search-modal/search-modal
 import { SesionModel } from 'src/app/modelos/sesion.model';
 import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
+import { Modulos } from 'src/app/enum/PermisosPantallas.enum';
 
 @Component({
   selector: 'vex-sidenav',
@@ -46,7 +47,6 @@ export class SidenavComponent implements OnInit {
               }
 
  async ngOnInit() {
-debugger
 
     this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
     //SE SOBREESCRIBE EL VALOR POR SI HUBO CAMBIOS EN LAS FUNCIONES (SIDEBAR)
@@ -57,7 +57,7 @@ debugger
      menu.forEach((x)=>{
 
       switch(x.funcion){
-        case 'Mesa de Validación':
+        case Modulos.MESA_VALIDACION:
         children.push({
           type: 'link',
           label: 'Mesa validación',
@@ -67,7 +67,7 @@ debugger
         });
         break;
 
-        case 'Clientes':
+        case Modulos.CLIENTES:
         children.push({
           type: 'link',
           label: 'Clientes',
@@ -77,7 +77,7 @@ debugger
         });
         break;
 
-        case 'Áreas':
+        case Modulos.AREAS:
         children.push({
           type: 'link',
           label: 'Áreas',
@@ -87,7 +87,7 @@ debugger
         });
         break;
 
-        case 'Roles':
+        case Modulos.ROLES:
         children.push({
           type: 'link',
           label: 'Roles',
@@ -97,7 +97,7 @@ debugger
         });
         break;
 
-        case 'Usuarios':
+        case Modulos.USUARIOS:
         children.push({
           type: 'link',
           label: 'Usuarios',

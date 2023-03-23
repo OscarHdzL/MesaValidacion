@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TableColumn } from 'src/@vex/interfaces/table-column.interface';
 import { ClienteModel } from 'src/app/modelos/cliente.model';
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
@@ -13,7 +13,7 @@ import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 import { ModalClienteComponent } from './modal-cliente/modal-cliente.component';
 import { Funcion, SesionModel } from 'src/app/modelos/sesion.model';
 import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
-import { PermisosCliente, PermisosClientePartida } from 'src/app/enum/PermisosPantallas.enum';
+import { Modulos, PermisosCliente, PermisosClientePartida } from 'src/app/enum/PermisosPantallas.enum';
 
 @Component({
   selector: 'vex-clientes',
@@ -32,6 +32,7 @@ export class ClientesComponent implements OnInit {
 
   //PERMISOS_USUARIO_PANTALLA: PerfilRolModel[] = [];
   PERMISOS_USUARIO_PANTALLA: string[] = [];
+  PERMISOS_SIDEBAR: string[] = [];
 
   Clientes: ClienteModel[] = [];
   dataSource:any;
@@ -56,7 +57,8 @@ export class ClientesComponent implements OnInit {
               private swalService: SwalServices,
               private route: ActivatedRoute,
               private dialog: MatDialog,
-              private mesaValidacionService: MesaValidacionService
+              private mesaValidacionService: MesaValidacionService,
+              private router: Router,
               ) {
                 let sesion = localStorage.getItem(KeysStorageEnum.USER);
                 this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
@@ -64,10 +66,18 @@ export class ClientesComponent implements OnInit {
                }
 
   async ngOnInit() {
-debugger
+
     this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    this.PERMISOS_SIDEBAR = this.sesionUsuarioActual.funciones.filter((x)=> x.modulo == 'Sidebar' && x.activo == true).map((Y)=>Y.funcion);
+
     //SE SOBREESCRIBE EL VALOR POR SI HUBO CAMBIOS EN LAS FUNCIONES
     localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
+    if(!this.PERMISOS_SIDEBAR.includes(Modulos.CLIENTES)){
+      console.log('NO TIENE ACCESO A LA PANTALLA CLIENTES');
+      this.router.navigate(['/components/inicio']);
+      return;
+    }
+
     this.definirPermisos();
     this.Clientes = await this.obtenerClientes();
 
@@ -124,7 +134,7 @@ debugger
 
 
   public async obtenerClientes(){
-    debugger
+
     const respuesta = this.esAdministrador ? await this.mesaValidacionService.obtenerCatalogoClientes() : await this.mesaValidacionService.obtenerCatalogoClientesByResponsablePartida(this.sesionUsuarioActual.id);
     if(respuesta.exito){
       if(this.esAdministrador){
@@ -152,7 +162,7 @@ debugger
         maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
         //maxWidth: '90%'
       }).afterClosed().subscribe(result => {
-        console.log(result);
+
         this.ngOnInit();
       });
   }
@@ -166,7 +176,7 @@ debugger
       disableClose: true,
       maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
     }).afterClosed().subscribe(result => {
-      console.log(result);
+
       this.ngOnInit();
     });
 }

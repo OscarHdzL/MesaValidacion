@@ -34,7 +34,7 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   async login() {
-    debugger
+
 
 
     try {

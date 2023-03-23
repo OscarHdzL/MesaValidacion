@@ -37,7 +37,7 @@ export class TabHistoricoComponent implements OnInit {
 
 
 
-    console.log(this.documento);
+
 /*     this.dummyData = archivoServicio.getArchivosById(this.objeto.id)
     this.listaVersionesDocumento = this.dummyData.versiones */
   }

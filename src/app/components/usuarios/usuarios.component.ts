@@ -1,3 +1,4 @@
+import { Modulos } from './../../enum/PermisosPantallas.enum';
 import { ModalFuncionUsuarioComponent } from './modal-funcion-usuario/modal-funcion-usuario.component';
 import { ModalUsuarioComponent } from './modal-usuario/modal-usuario.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -5,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TableColumn } from 'src/@vex/interfaces/table-column.interface';
 import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 import { SesionModel } from 'src/app/modelos/sesion.model';
@@ -32,6 +33,7 @@ export class UsuariosComponent implements OnInit {
 
   //PERMISOS_USUARIO_PANTALLA: PerfilUsuarioModel[] = [];
   PERMISOS_USUARIO_PANTALLA: string[] = [];
+  PERMISOS_SIDEBAR: string[] = [];
 
   Usuarios: UsuarioModel[] = [];
   dataSource:any;
@@ -52,7 +54,8 @@ export class UsuariosComponent implements OnInit {
               private swalService: SwalServices,
               private route: ActivatedRoute,
               private dialog: MatDialog,
-              private mesaValidacionService: MesaValidacionService
+              private mesaValidacionService: MesaValidacionService,
+              private router: Router,
               ) {
                 let sesion = localStorage.getItem(KeysStorageEnum.USER);
                 this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
@@ -78,7 +81,17 @@ export class UsuariosComponent implements OnInit {
 
   async ngOnInit() {
     this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    this.PERMISOS_SIDEBAR = this.sesionUsuarioActual.funciones.filter((x)=> x.modulo == 'Sidebar' && x.activo == true).map((Y)=>Y.funcion);
     localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
+
+    if(!this.PERMISOS_SIDEBAR.includes(Modulos.USUARIOS)){
+      console.log('NO TIENE ACCESO A LA PANTALLA USUARIOS');
+      this.router.navigate(['/components/inicio']);
+      return;
+    }
+
+
+
     this.Usuarios = await this.obtenerUsuarios();
 
     this.dataSource = new MatTableDataSource<UsuarioModel>(this.Usuarios);
@@ -118,7 +131,7 @@ export class UsuariosComponent implements OnInit {
         maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
         //maxWidth: '90%'
       }).afterClosed().subscribe(result => {
-        console.log(result);
+
         this.ngOnInit();
       });
   }
@@ -135,7 +148,7 @@ export class UsuariosComponent implements OnInit {
       maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
       //maxWidth: '90%'
     }).afterClosed().subscribe(result => {
-      console.log(result);
+
       this.ngOnInit();
     });
 }

@@ -62,7 +62,7 @@ export class ModalPeriodoComponent implements OnInit {
 
   public async periodoSeleccionado(periodo: PeriodoModel){
 
-    console.log(periodo);
+
     this.inicio.setValue(periodo.inicio.substring(0,10));
     this.fin.setValue(periodo.fin.substring(0,10));
 

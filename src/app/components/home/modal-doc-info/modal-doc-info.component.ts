@@ -109,7 +109,7 @@ export class ModalDocInfoComponent implements OnInit {
       }
     }
 
-    console.log(this.documento)
+
     this.iniciarForm();
    }
 
@@ -264,7 +264,7 @@ export class ModalDocInfoComponent implements OnInit {
   async editableSeleccionado(event) {
     if(event.target.files.length > 0)
      {
-       console.log(event.target.files[0].name);
+
 
        const formData: any = new FormData();
       formData.append('file', event.target.files[0]);
@@ -285,7 +285,7 @@ export class ModalDocInfoComponent implements OnInit {
    async firmadoSeleccionado(event) {
     if(event.target.files.length > 0)
      {
-      console.log(event.target.files[0].name);
+
       const formData: any = new FormData();
      formData.append('file', event.target.files[0]);
      const respuesta = await this.filemanagerService.cargarArchivo(formData);
@@ -304,7 +304,7 @@ export class ModalDocInfoComponent implements OnInit {
   async editableSeleccionadoEdicion(event) {
     if(event.target.files.length > 0)
      {
-       console.log(event.target.files[0].name);
+
 
        const formData: any = new FormData();
       formData.append('file', event.target.files[0]);
@@ -326,7 +326,7 @@ export class ModalDocInfoComponent implements OnInit {
    async firmadoSeleccionadoEdicion(event) {
     if(event.target.files.length > 0)
      {
-      console.log(event.target.files[0].name);
+
       const formData: any = new FormData();
      formData.append('file', event.target.files[0]);
      const respuesta = await this.filemanagerService.cargarArchivo(formData);
@@ -356,7 +356,7 @@ export class ModalDocInfoComponent implements OnInit {
       data: this.documento,
       disableClose: true
     }).afterClosed().subscribe(result => {
-      console.log(result);
+
       this.ngOnInit()
     });
   }
@@ -383,7 +383,7 @@ export class ModalDocInfoComponent implements OnInit {
       data: doc,
       disableClose: true
     }).afterClosed().subscribe(result => {
-      console.log(result);
+
       this.ngOnInit()
     });
 
@@ -441,7 +441,7 @@ export class ModalDocInfoComponent implements OnInit {
       data: url,
       disableClose: true
     }).afterClosed().subscribe(result => {
-      console.log(result);
+
       this.ngOnInit()
     });
   }

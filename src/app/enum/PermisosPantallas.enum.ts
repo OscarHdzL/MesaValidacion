@@ -1,3 +1,13 @@
+export enum Modulos{
+  MESA_VALIDACION = 'Mesa de Validación',
+  CLIENTES = 'Clientes',
+  AREAS = 'Áreas',
+  ROLES = 'Roles',
+  USUARIOS = 'Usuarios'
+}
+
+
+
 export enum PermisosCliente {
   MODULO = 'Clientes',
   LISTAR = 'Listar clientes',

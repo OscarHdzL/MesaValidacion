@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TableColumn } from 'src/@vex/interfaces/table-column.interface';
 import { AreaModel } from 'src/app/modelos/area.model';
 import { ClienteModel } from 'src/app/modelos/cliente.model';
@@ -13,6 +13,7 @@ import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 import { ModalAreaComponent } from './modal-area/modal-area.component';
 import { SesionModel } from 'src/app/modelos/sesion.model';
 import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
+import { Modulos } from 'src/app/enum/PermisosPantallas.enum';
 
 @Component({
   selector: 'vex-areas',
@@ -30,6 +31,7 @@ export class AreasComponent implements OnInit {
 
   //PERMISOS_USUARIO_PANTALLA: PerfilRolModel[] = [];
   PERMISOS_USUARIO_PANTALLA: string[] = [];
+  PERMISOS_SIDEBAR: string[] = [];
 
   Areas: AreaModel[] = [];
   dataSource:any;
@@ -49,7 +51,8 @@ export class AreasComponent implements OnInit {
               private swalService: SwalServices,
               private route: ActivatedRoute,
               private dialog: MatDialog,
-              private mesaValidacionService: MesaValidacionService
+              private mesaValidacionService: MesaValidacionService,
+              private router: Router,
               ) {
                 let sesion = localStorage.getItem(KeysStorageEnum.USER);
                 this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
@@ -76,7 +79,15 @@ export class AreasComponent implements OnInit {
 
   async ngOnInit() {
     this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    this.PERMISOS_SIDEBAR = this.sesionUsuarioActual.funciones.filter((x)=> x.modulo == 'Sidebar' && x.activo == true).map((Y)=>Y.funcion);
     localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
+
+    if(!this.PERMISOS_SIDEBAR.includes(Modulos.AREAS)){
+      console.log('NO TIENE ACCESO A LA PANTALLA AREAS');
+      this.router.navigate(['/components/inicio']);
+      return;
+    }
+
     this.Areas = await this.obtenerAreas();
 
     this.dataSource = new MatTableDataSource<AreaModel>(this.Areas);
@@ -116,7 +127,7 @@ export class AreasComponent implements OnInit {
         maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
         //maxWidth: '90%'
       }).afterClosed().subscribe(result => {
-        console.log(result);
+
         this.ngOnInit();
       });
   }

@@ -48,7 +48,7 @@ export class ModalForoComponent implements OnInit, AfterViewInit {
     let sesion = localStorage.getItem(KeysStorageEnum.USER);
     this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
     this.idUsuarioActual = this.sesionUsuarioActual.id;
-    console.log(this.doc);
+
   }
 
   async ngOnInit() {

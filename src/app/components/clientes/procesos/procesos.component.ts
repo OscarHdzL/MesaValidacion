@@ -153,7 +153,7 @@ export class ProcesosComponent implements OnInit {
         maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
         //maxWidth: '90%'
       }).afterClosed().subscribe(result => {
-        console.log(result);
+
         this.ngOnInit();
       });
   }
@@ -168,7 +168,7 @@ export class ProcesosComponent implements OnInit {
       disableClose: true,
       maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
     }).afterClosed().subscribe(result => {
-      console.log(result);
+
       this.ngOnInit();
     });
 }
@@ -183,7 +183,7 @@ openModalProcesoUsuarios(proceso: ProcesoModel){
     disableClose: true,
     maxWidth: (window.innerWidth >= 1280) ? '80vw': '100vw',
   }).afterClosed().subscribe(result => {
-    console.log(result);
+
     this.ngOnInit();
   });
 }
