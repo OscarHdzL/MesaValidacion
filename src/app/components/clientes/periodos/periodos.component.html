@@ -78,7 +78,7 @@
           <div class="flex justify-center">
             <a
               (click)="openModalDocumentos(row)"
-              *ngIf="this.permiso_Listar_periodo_periodo"
+              *ngIf="this.permiso_Listar_periodo_documento"
               matTooltip="Ver documentos"
               class="w-10 h-10 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary/10 mr-2"
               mat-icon-button
@@ -87,6 +87,7 @@
             </a>
             <a
               (click)="openModalProyectos(row)"
+              *ngIf="this.permiso_Listar_periodo_proyecto"
               matTooltip="Ver proyectos"
               class="w-10 h-10 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary/10 mr-2"
               mat-icon-button

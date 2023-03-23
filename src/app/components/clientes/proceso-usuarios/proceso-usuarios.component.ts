@@ -1,3 +1,4 @@
+import { PermisosClientePartidaProcesoUsuario } from './../../../enum/PermisosPantallas.enum';
 
 import { ProcesoModel } from 'src/app/modelos/procesos.model';
 
@@ -14,7 +15,7 @@ import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 import { ProcesoUsuarioModel } from 'src/app/modelos/proceso-usuario.model';
 import { ModalProcesoUsuarioComponent } from './modal-proceso-usuario/modal-proceso-usuario.component';
-import { SesionModel } from 'src/app/modelos/sesion.model';
+import { Funcion, SesionModel } from 'src/app/modelos/sesion.model';
 import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 
 
@@ -31,7 +32,7 @@ export class ProcesoUsuariosComponent implements OnInit {
   permiso_Actualizar_procesoUsuario = false;
   permiso_Eliminar_procesoUsuario = false;
   permiso_Listar_proyecto_procesoUsuario = false;
-Disabled
+  esAdministrador: boolean = false;
 
   //PERMISOS_USUARIO_PANTALLA: PerfilProcesoUsuarioModel[] = [];
   PERMISOS_USUARIO_PANTALLA: string[] = [];
@@ -60,11 +61,7 @@ Disabled
                 let sesion = localStorage.getItem(KeysStorageEnum.USER);
     this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
                   //
-                  this.permiso_Listar_procesoUsuario = true;
-                  this.permiso_Agregar_procesoUsuario = true;
-                  this.permiso_Actualizar_procesoUsuario = true;
-                  this.permiso_Eliminar_procesoUsuario = true;
-                  this.permiso_Listar_proyecto_procesoUsuario = true;
+
 
                 /* let permisosSesion: PerfilProcesoUsuarioModel[] = JSON.parse(localStorage.getItem('MENU_USUARIO'));
                 if(permisosSesion.length > 0){
@@ -80,6 +77,9 @@ Disabled
                }
 
   async ngOnInit() {
+    this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
+    this.definirPermisos();
     this.ProcesoUsuarios = await this.obtenerProcesoUsuarios();
 
     this.dataSource = new MatTableDataSource<ProcesoUsuarioModel>(this.ProcesoUsuarios);
@@ -90,6 +90,38 @@ Disabled
     this.matPaginatorIntl.previousPageLabel  = 'Anterior página';
     this.matPaginatorIntl.nextPageLabel = 'Siguiente página';
 
+  }
+
+
+  public async obtenerFunciones(){
+    const respuesta = await this.mesaValidacionService.obtenerFuncionesUsuario(this.sesionUsuarioActual.id);
+    return respuesta.exito ? respuesta.respuesta : [];
+  }
+
+  public async definirPermisos(){
+debugger
+    this.esAdministrador = this.sesionUsuarioActual.administrador ? this.sesionUsuarioActual.administrador: false;
+    if(this.esAdministrador){
+      this.permiso_Listar_procesoUsuario = true;
+      this.permiso_Agregar_procesoUsuario = true;
+      this.permiso_Actualizar_procesoUsuario = true;
+      this.permiso_Eliminar_procesoUsuario = true;
+      this.permiso_Listar_proyecto_procesoUsuario = true;
+  }
+  else {
+    let permisosSesion: Funcion[] = this.sesionUsuarioActual.funciones;
+
+    if(permisosSesion.length > 0){
+      this.PERMISOS_USUARIO_PANTALLA =  permisosSesion.filter((permiso)=>(permiso.modulo == PermisosClientePartidaProcesoUsuario.MODULO) && permiso.activo == true).map((Y)=>Y.funcion);
+      this.permiso_Listar_procesoUsuario = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoUsuario.LISTAR);
+      this.permiso_Agregar_procesoUsuario = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoUsuario.AGREGAR);
+      this.permiso_Actualizar_procesoUsuario = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoUsuario.EDITAR);
+      this.permiso_Eliminar_procesoUsuario = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoUsuario.ELIMINAR);
+
+    } else {
+      this.PERMISOS_USUARIO_PANTALLA = [];
+    }
+}
   }
 
   public async obtenerProcesoUsuarios(){

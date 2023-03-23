@@ -43,8 +43,76 @@ export class SidenavComponent implements OnInit {
               }
 
   ngOnInit() {
+debugger
+    let children = [];
+     let menu = this.sesionUsuarioActual.funciones.filter((x)=> x.modulo == 'Sidebar' && x.activo == true);
+     menu.forEach((x)=>{
 
-    if(this.sesionUsuarioActual.administrador){
+      switch(x.funcion){
+        case 'Mesa de Validación':
+        children.push({
+          type: 'link',
+          label: 'Mesa validación',
+          route: '/components/home',
+          icon: 'mat:file_copy',
+          routerLinkActiveOptions: { exact: true }
+        });
+        break;
+
+        case 'Clientes':
+        children.push({
+          type: 'link',
+          label: 'Clientes',
+          route: '/components/clientes',
+          icon: 'mat:list',
+          routerLinkActiveOptions: { exact: true }
+        });
+        break;
+
+        case 'Áreas':
+        children.push({
+          type: 'link',
+          label: 'Áreas',
+          route: '/components/areas',
+          icon: 'mat:list',
+          routerLinkActiveOptions: { exact: true }
+        });
+        break;
+
+        case 'Roles':
+        children.push({
+          type: 'link',
+          label: 'Roles',
+          route: '/components/roles',
+          icon: 'mat:list',
+          routerLinkActiveOptions: { exact: true }
+        });
+        break;
+
+        case 'Usuarios':
+        children.push({
+          type: 'link',
+          label: 'Usuarios',
+          route: '/components/usuarios',
+          icon: 'mat:list',
+          routerLinkActiveOptions: { exact: true }
+        });
+        break;
+      }
+     });
+
+     this.navigationService.items = [
+      {
+        type: 'subheading',
+        label: 'Contenido',
+        children: children
+      }];
+
+
+
+    this.items = this.navigationService.items;
+
+        /* if(this.sesionUsuarioActual.administrador){
       this.navigationService.items = [
         {
           type: 'subheading',
@@ -112,9 +180,7 @@ export class SidenavComponent implements OnInit {
           ]
         }
       ];
-    }
-
-    this.items = this.navigationService.items;
+    } */
   }
 
   collapseOpenSidenav() {

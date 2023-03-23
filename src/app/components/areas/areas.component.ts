@@ -75,6 +75,8 @@ export class AreasComponent implements OnInit {
                }
 
   async ngOnInit() {
+    this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
     this.Areas = await this.obtenerAreas();
 
     this.dataSource = new MatTableDataSource<AreaModel>(this.Areas);
@@ -85,6 +87,12 @@ export class AreasComponent implements OnInit {
     this.matPaginatorIntl.previousPageLabel  = 'Anterior página';
     this.matPaginatorIntl.nextPageLabel = 'Siguiente página';
 
+  }
+
+
+  public async obtenerFunciones(){
+    const respuesta = await this.mesaValidacionService.obtenerFuncionesUsuario(this.sesionUsuarioActual.id);
+    return respuesta.exito ? respuesta.respuesta : [];
   }
 
   public async obtenerAreas(){

@@ -23,3 +23,29 @@ export class UsuarioFormModel {
   }
 
 }
+
+
+
+export class FuncionModel {
+  id:            number;
+  idFuncion:     number;
+  modulo:        string;
+  funcion:       string;
+  idUsuario:     number;
+  administrador: boolean;
+  correo:        string;
+  nombre:        string;
+  activo:        boolean;
+  inclusion: string
+}
+
+export class FuncionUsuarioFormModel {
+  id:             number;
+  catUsuarioId:   number;
+  catFuncionesId: number;
+  inclusion:      string;
+  activo:         boolean;
+}
+
+
+

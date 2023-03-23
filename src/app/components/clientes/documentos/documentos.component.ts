@@ -1,3 +1,4 @@
+import { PermisosClientePartidaProcesoPeriodoDocumento } from './../../../enum/PermisosPantallas.enum';
 import { PeriodoModel } from './../../../modelos/periodos.model';
 import { ModalDocumentoComponent } from './modal-documento/modal-documento.component';
 
@@ -10,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TableColumn } from 'src/@vex/interfaces/table-column.interface';
 import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 import { DocumentoModel } from 'src/app/modelos/documentos.model';
-import { SesionModel } from 'src/app/modelos/sesion.model';
+import { Funcion, SesionModel } from 'src/app/modelos/sesion.model';
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 
@@ -27,6 +28,7 @@ export class DocumentosComponent implements OnInit {
   permiso_Actualizar_documento = false;
   permiso_Eliminar_documento = false;
   permiso_Listar_proyecto_documento = false;
+  esAdministrador: boolean = false;
 
 
   //PERMISOS_USUARIO_PANTALLA: PerfilRolModel[] = [];
@@ -56,27 +58,14 @@ export class DocumentosComponent implements OnInit {
 
                 let sesion = localStorage.getItem(KeysStorageEnum.USER);
                 this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
-                  //
-                  this.permiso_Listar_documento = true;
-                  this.permiso_Agregar_documento = true;
-                  this.permiso_Actualizar_documento = true;
-                  this.permiso_Eliminar_documento = true;
-                  this.permiso_Listar_proyecto_documento = true;
-                /* let permisosSesion: PerfilRolModel[] = JSON.parse(localStorage.getItem('MENU_USUARIO'));
-                if(permisosSesion.length > 0){
-                  this.PERMISOS_USUARIO_PANTALLA =  permisosSesion.filter((permiso)=>permiso.alphaModulo == PermisosModuloCatalogoDocumento.Alpha_Modulo).map((Y)=>Y.alphaModuloComponente);
-                  this.permiso_Listar_documento = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoDocumento.Listar_documento);
-                  this.permiso_Agregar_documento = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoDocumento.Agregar_documento);
-                  this.permiso_Actualizar_documento = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoDocumento.Actualizar_documento);
-                  this.permiso_Eliminar_documento = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoDocumento.Eliminar_documento);
-                  this.permiso_Listar_proyecto_documento = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoDocumento.Listar_proyecto_documento);
-                } else {
-                  this.PERMISOS_USUARIO_PANTALLA = [];
-                } */
+
+
                }
 
   async ngOnInit() {
-
+    this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
+    this.definirPermisos();
     this.Documentos = await this.obtenerDocumentos();
 
     this.dataSource = new MatTableDataSource<DocumentoModel>(this.Documentos);
@@ -86,6 +75,40 @@ export class DocumentosComponent implements OnInit {
     this.matPaginatorIntl.itemsPerPageLabel = "Documentos por página";
     this.matPaginatorIntl.previousPageLabel  = 'Anterior página';
     this.matPaginatorIntl.nextPageLabel = 'Siguiente página';
+
+  }
+
+
+
+  public async obtenerFunciones(){
+    const respuesta = await this.mesaValidacionService.obtenerFuncionesUsuario(this.sesionUsuarioActual.id);
+    return respuesta.exito ? respuesta.respuesta : [];
+  }
+
+  public async definirPermisos(){
+
+    this.esAdministrador = this.sesionUsuarioActual.administrador ? this.sesionUsuarioActual.administrador: false;
+    if(this.esAdministrador){
+      this.permiso_Listar_documento = true;
+      this.permiso_Agregar_documento = true;
+      this.permiso_Actualizar_documento = true;
+      this.permiso_Eliminar_documento = true;
+      this.permiso_Listar_proyecto_documento = true;
+    }else{
+
+      let permisosSesion: Funcion[] = this.sesionUsuarioActual.funciones;
+
+      if(permisosSesion.length > 0){
+        this.PERMISOS_USUARIO_PANTALLA =  permisosSesion.filter((permiso) => (permiso.modulo == PermisosClientePartidaProcesoPeriodoDocumento.MODULO) && permiso.activo == true).map((Y)=>Y.funcion);
+        this.permiso_Listar_documento = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoPeriodoDocumento.LISTAR);
+        this.permiso_Agregar_documento = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoPeriodoDocumento.AGREGAR);
+        this.permiso_Actualizar_documento = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoPeriodoDocumento.EDITAR);
+        this.permiso_Eliminar_documento = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoPeriodoDocumento.ELIMINAR);
+
+      } else {
+        this.PERMISOS_USUARIO_PANTALLA = [];
+      }
+    }
 
   }
 

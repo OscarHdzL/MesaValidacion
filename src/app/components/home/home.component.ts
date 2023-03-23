@@ -52,7 +52,8 @@ export class HomeComponent implements OnInit {
   }
 
   async ngOnInit() {
-
+    this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
     this.sesionUsuarioActual.clientes = await this.obtenerClientesUsuarioSesion();
     this.listaClientes = await this.obtenerClientes();
     //this.changeProyecto(1);
@@ -103,7 +104,10 @@ export class HomeComponent implements OnInit {
   get periodo ()  {return this.formBusqueda.get('periodo');}
   get proyecto()  {return this.formBusqueda.get('proyecto');}
 
-
+  public async obtenerFunciones(){
+    const respuesta = await this.mesaValidacionService.obtenerFuncionesUsuario(this.sesionUsuarioActual.id);
+    return respuesta.exito ? respuesta.respuesta : [];
+  }
 
   public async obtenerClientesUsuarioSesion(){
     const respuesta = await this.mesaValidacionService.obtenerCatalogoClientesByUsuarioSesion(this.sesionUsuarioActual.id);
@@ -223,9 +227,11 @@ export class HomeComponent implements OnInit {
       autoFocus: true,
       data: doc,
       disableClose: true
-    }).afterClosed().subscribe(result => {
+    }).afterClosed().subscribe(async result => {
       console.log(result);
-      this.ngOnInit()
+      //await this.ngOnInit();
+      //Se recarga el listado de documento del proyecto
+      await this.changeProyecto(this.proyecto.value);
     });
   }
 
@@ -240,10 +246,12 @@ export class HomeComponent implements OnInit {
       autoFocus: true,
       data: doc,
       disableClose: true
-    }).afterClosed().subscribe(result => {
+    }).afterClosed().subscribe(async result => {
 
       console.log(result);
-      this.ngOnInit()
+      //this.ngOnInit()
+      //Se recarga el listado de documento del proyecto
+      await this.changeProyecto(this.proyecto.value);
     });
   }
 
@@ -256,9 +264,11 @@ export class HomeComponent implements OnInit {
       autoFocus: true,
       data: doc,
       disableClose: true
-    }).afterClosed().subscribe(result => {
+    }).afterClosed().subscribe(async result => {
       console.log(result);
-      this.ngOnInit()
+      //this.ngOnInit()
+      //Se recarga el listado de documento del proyecto
+      await this.changeProyecto(this.proyecto.value);
     });
   }
 }

@@ -1,3 +1,4 @@
+import { PermisosClientePartidaProcesoPeriodoProyecto } from './../../../enum/PermisosPantallas.enum';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -9,7 +10,7 @@ import { ProyectoFormModel, ProyectoModel } from 'src/app/modelos/proyectos.mode
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 import { ModalProyectoComponent } from './modal-proyecto/modal-proyecto.component';
-import { SesionModel } from 'src/app/modelos/sesion.model';
+import { Funcion, SesionModel } from 'src/app/modelos/sesion.model';
 import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 
 
@@ -25,6 +26,7 @@ export class ProyectosComponent implements OnInit {
   permiso_Actualizar_proyecto = false;
   permiso_Eliminar_proyecto = false;
   permiso_Listar_proyecto_proyecto = false;
+  esAdministrador: boolean = false;
 
   ProyectoModel: ProyectoFormModel = new ProyectoFormModel();
   //PERMISOS_USUARIO_PANTALLA: PerfilRolModel[] = [];
@@ -52,27 +54,13 @@ export class ProyectosComponent implements OnInit {
               ) {
                 let sesion = localStorage.getItem(KeysStorageEnum.USER);
                 this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
-                  //
-                  this.permiso_Listar_proyecto = true;
-                  this.permiso_Agregar_proyecto = true;
-                  this.permiso_Actualizar_proyecto = true;
-                  this.permiso_Eliminar_proyecto = true;
-                  this.permiso_Listar_proyecto_proyecto = true;
-                /* let permisosSesion: PerfilRolModel[] = JSON.parse(localStorage.getItem('MENU_USUARIO'));
-                if(permisosSesion.length > 0){
-                  this.PERMISOS_USUARIO_PANTALLA =  permisosSesion.filter((permiso)=>permiso.alphaModulo == PermisosModuloCatalogoProyecto.Alpha_Modulo).map((Y)=>Y.alphaModuloComponente);
-                  this.permiso_Listar_proyecto = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoProyecto.Listar_proyecto);
-                  this.permiso_Agregar_proyecto = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoProyecto.Agregar_proyecto);
-                  this.permiso_Actualizar_proyecto = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoProyecto.Actualizar_proyecto);
-                  this.permiso_Eliminar_proyecto = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoProyecto.Eliminar_proyecto);
-                  this.permiso_Listar_proyecto_proyecto = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoProyecto.Listar_proyecto_proyecto);
-                } else {
-                  this.PERMISOS_USUARIO_PANTALLA = [];
-                } */
+
                }
 
   async ngOnInit() {
-
+    this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
+    this.definirPermisos();
     this.Proyectos = await this.obtenerProyectos();
 
     this.dataSource = new MatTableDataSource<ProyectoModel>(this.Proyectos);
@@ -83,8 +71,39 @@ export class ProyectosComponent implements OnInit {
     this.matPaginatorIntl.previousPageLabel  = 'Anterior página';
     this.matPaginatorIntl.nextPageLabel = 'Siguiente página';
 
-    debugger
+
     this.periodoModel
+  }
+
+
+
+  public async obtenerFunciones(){
+    const respuesta = await this.mesaValidacionService.obtenerFuncionesUsuario(this.sesionUsuarioActual.id);
+    return respuesta.exito ? respuesta.respuesta : [];
+  }
+
+  public async definirPermisos(){
+debugger
+this.esAdministrador = this.sesionUsuarioActual.administrador ? this.sesionUsuarioActual.administrador: false;
+if(this.esAdministrador){
+  this.permiso_Listar_proyecto = true;
+  this.permiso_Agregar_proyecto = true;
+  this.permiso_Actualizar_proyecto = true;
+  this.permiso_Eliminar_proyecto = true;
+  this.permiso_Listar_proyecto_proyecto = true;
+} else {
+  let permisosSesion: Funcion[] = this.sesionUsuarioActual.funciones;
+
+  if(permisosSesion.length > 0){
+    this.PERMISOS_USUARIO_PANTALLA =  permisosSesion.filter((permiso) => (permiso.modulo == PermisosClientePartidaProcesoPeriodoProyecto.MODULO) && permiso.activo == true).map((Y)=>Y.funcion);
+    this.permiso_Listar_proyecto = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoPeriodoProyecto.LISTAR);
+    this.permiso_Agregar_proyecto = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoPeriodoProyecto.AGREGAR);
+    this.permiso_Actualizar_proyecto = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoPeriodoProyecto.EDITAR);
+    this.permiso_Eliminar_proyecto = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoPeriodoProyecto.ELIMINAR);
+  } else {
+    this.PERMISOS_USUARIO_PANTALLA = [];
+  }
+}
   }
 
   public async obtenerProyectos(){

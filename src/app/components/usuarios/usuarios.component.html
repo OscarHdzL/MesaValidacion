@@ -68,6 +68,15 @@
                 <mat-icon class="icon-sm" svgIcon="mat:edit"></mat-icon>
               </a>
               <a
+                (click)="openModalFunciones(row)"
+                *ngIf="this.permiso_Actualizar_usuario"
+                matTooltip="Ver funciones"
+                class="w-10 h-10 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary/10 mr-2"
+                mat-icon-button
+              >
+                <mat-icon class="icon-sm" svgIcon="mat:list"></mat-icon>
+              </a>
+              <a
                 (click)="eliminarUsuario(row)"
                 matTooltip="Eliminar usuario"
                 *ngIf="this.permiso_Eliminar_usuario"

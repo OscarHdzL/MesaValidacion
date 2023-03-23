@@ -1,3 +1,4 @@
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -51,6 +52,8 @@ import { DocViewerComponent } from './doc-viewer/doc-viewer.component';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { ModalResponsablePartidaComponent } from './clientes/partidas/modal-responsable-partida/modal-responsable-partida.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ModalFuncionUsuarioComponent } from './usuarios/modal-funcion-usuario/modal-funcion-usuario.component';
+import { InicioComponent } from './inicio/inicio.component';
 @NgModule({
   declarations: [
     HomeComponent,
@@ -81,6 +84,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     ModalMovimimientosProyectoComponent,
     DocViewerComponent,
     ModalResponsablePartidaComponent,
+    ModalFuncionUsuarioComponent,
+    InicioComponent,
   ],
   imports: [
     CommonModule,
@@ -108,7 +113,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatButtonModule,
     NgxDocViewerModule,
     MatAutocompleteModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatSlideToggleModule
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'es-MX'},

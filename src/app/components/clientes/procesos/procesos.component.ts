@@ -1,3 +1,4 @@
+import { PermisosClientePartidaProceso, PermisosClientePartidaProcesoUsuario, PermisosClientePartidaProcesoPeriodo } from './../../../enum/PermisosPantallas.enum';
 import { ProcesoUsuariosComponent } from './../proceso-usuarios/proceso-usuarios.component';
 import { PartidaModel } from './../../../modelos/partidas.model';
 import { PeriodosComponent } from './../periodos/periodos.component';
@@ -15,7 +16,7 @@ import { TableColumn } from 'src/@vex/interfaces/table-column.interface';
 
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
-import { SesionModel } from 'src/app/modelos/sesion.model';
+import { Funcion, SesionModel } from 'src/app/modelos/sesion.model';
 import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 
 @Component({
@@ -33,7 +34,9 @@ export class ProcesosComponent implements OnInit {
   permiso_Agregar_proceso = false;
   permiso_Actualizar_proceso = false;
   permiso_Eliminar_proceso = false;
-  permiso_Listar_proceso_proceso = false;
+  permiso_Listar_proceso_periodo = false;
+  permiso_Listar_proceso_usuario = false;
+
 
 
   ProcesoModel: ProcesoFormModel = new ProcesoFormModel();
@@ -63,23 +66,17 @@ export class ProcesosComponent implements OnInit {
               private dialog: MatDialog,
               private mesaValidacionService: MesaValidacionService
               ) {
+                debugger
                 let sesion = localStorage.getItem(KeysStorageEnum.USER);
                 this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
 
-                this.esAdministrador = this.sesionUsuarioActual.administrador ? this.sesionUsuarioActual.administrador: false;
 
-                /* if(!this.esAdministrador){ */
-                  this.permiso_Listar_proceso = true;
-                  this.permiso_Agregar_proceso = true;
-                  this.permiso_Actualizar_proceso = true;
-                  this.permiso_Eliminar_proceso = true;
-                  this.permiso_Listar_proceso_proceso = true;
-                  this.permiso_Listar_usuarios = true;
-           /*      } */
                }
 
   async ngOnInit() {
-
+    this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
+    this.definirPermisos();
     this.Procesos = await this.obtenerProcesos();
 
     this.dataSource = new MatTableDataSource<ProcesoModel>(this.Procesos);
@@ -91,6 +88,42 @@ export class ProcesosComponent implements OnInit {
     this.matPaginatorIntl.nextPageLabel = 'Siguiente página';
 
   }
+
+
+
+  public async obtenerFunciones(){
+    const respuesta = await this.mesaValidacionService.obtenerFuncionesUsuario(this.sesionUsuarioActual.id);
+    return respuesta.exito ? respuesta.respuesta : [];
+  }
+
+  public async definirPermisos(){
+debugger
+    this.esAdministrador = this.sesionUsuarioActual.administrador ? this.sesionUsuarioActual.administrador: false;
+    if(this.esAdministrador){
+    this.permiso_Listar_proceso = true;
+    this.permiso_Agregar_proceso = true;
+    this.permiso_Actualizar_proceso = true;
+    this.permiso_Eliminar_proceso = true;
+    this.permiso_Listar_proceso_periodo = true;
+    this.permiso_Listar_usuarios = true;
+  }
+  else {
+    let permisosSesion: Funcion[] = this.sesionUsuarioActual.funciones;
+
+    if(permisosSesion.length > 0){
+      this.PERMISOS_USUARIO_PANTALLA =  permisosSesion.filter((permiso)=>(permiso.modulo == PermisosClientePartidaProceso.MODULO || PermisosClientePartidaProcesoUsuario.MODULO) && permiso.activo == true).map((Y)=>Y.funcion);
+      this.permiso_Listar_proceso = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProceso.LISTAR);
+      this.permiso_Agregar_proceso = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProceso.AGREGAR);
+      this.permiso_Actualizar_proceso = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProceso.EDITAR);
+      this.permiso_Eliminar_proceso = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProceso.ELIMINAR);
+      this.permiso_Listar_proceso_periodo = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoPeriodo.LISTAR);
+      this.permiso_Listar_usuarios = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoUsuario.LISTAR);
+    } else {
+      this.PERMISOS_USUARIO_PANTALLA = [];
+    }
+}
+  }
+
 
   public async obtenerProcesos(){
     const respuesta = await this.mesaValidacionService.obtenerCatalogoProcesos(this.partidaModel.id);

@@ -1,3 +1,4 @@
+import { PermisosClientePartidaProcesoPeriodo, PermisosClientePartidaProcesoPeriodoDocumento, PermisosClientePartidaProcesoPeriodoProyecto } from './../../../enum/PermisosPantallas.enum';
 import { ProyectosComponent } from './../proyectos/proyectos.component';
 import { ProcesoModel } from './../../../modelos/procesos.model';
 import { DocumentosComponent } from './../documentos/documentos.component';
@@ -16,7 +17,7 @@ import { TableColumn } from 'src/@vex/interfaces/table-column.interface';
 
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
-import { SesionModel } from 'src/app/modelos/sesion.model';
+import { Funcion, SesionModel } from 'src/app/modelos/sesion.model';
 import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 
 @Component({
@@ -31,6 +32,12 @@ export class PeriodosComponent implements OnInit {
   permiso_Actualizar_periodo = false;
   permiso_Eliminar_periodo = false;
   permiso_Listar_periodo_periodo = false;
+
+  permiso_Listar_periodo_documento = false;
+  permiso_Listar_periodo_proyecto = false;
+
+
+  esAdministrador: boolean = false;
 
   PeriodoModel: PeriodoFormModel = new PeriodoFormModel();
   //PERMISOS_USUARIO_PANTALLA: PerfilRolModel[] = [];
@@ -62,27 +69,13 @@ export class PeriodosComponent implements OnInit {
               ) {
                 let sesion = localStorage.getItem(KeysStorageEnum.USER);
                 this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
-                  //
-                  this.permiso_Listar_periodo = true;
-                  this.permiso_Agregar_periodo = true;
-                  this.permiso_Actualizar_periodo = true;
-                  this.permiso_Eliminar_periodo = true;
-                  this.permiso_Listar_periodo_periodo = true;
-                /* let permisosSesion: PerfilRolModel[] = JSON.parse(localStorage.getItem('MENU_USUARIO'));
-                if(permisosSesion.length > 0){
-                  this.PERMISOS_USUARIO_PANTALLA =  permisosSesion.filter((permiso)=>permiso.alphaModulo == PermisosModuloCatalogoPeriodo.Alpha_Modulo).map((Y)=>Y.alphaModuloComponente);
-                  this.permiso_Listar_periodo = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoPeriodo.Listar_periodo);
-                  this.permiso_Agregar_periodo = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoPeriodo.Agregar_periodo);
-                  this.permiso_Actualizar_periodo = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoPeriodo.Actualizar_periodo);
-                  this.permiso_Eliminar_periodo = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoPeriodo.Eliminar_periodo);
-                  this.permiso_Listar_periodo_periodo = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoPeriodo.Listar_periodo_periodo);
-                } else {
-                  this.PERMISOS_USUARIO_PANTALLA = [];
-                } */
+
                }
 
   async ngOnInit() {
-
+    this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
+    this.definirPermisos();
     this.Periodos = await this.obtenerPeriodos();
 
     this.dataSource = new MatTableDataSource<PeriodoModel>(this.Periodos);
@@ -93,6 +86,41 @@ export class PeriodosComponent implements OnInit {
     this.matPaginatorIntl.previousPageLabel  = 'Anterior página';
     this.matPaginatorIntl.nextPageLabel = 'Siguiente página';
 
+  }
+
+
+  public async obtenerFunciones(){
+    const respuesta = await this.mesaValidacionService.obtenerFuncionesUsuario(this.sesionUsuarioActual.id);
+    return respuesta.exito ? respuesta.respuesta : [];
+  }
+
+  public async definirPermisos(){
+
+    this.esAdministrador = this.sesionUsuarioActual.administrador ? this.sesionUsuarioActual.administrador: false;
+                  //
+                  if(this.esAdministrador){
+                    this.permiso_Listar_periodo = true;
+                    this.permiso_Agregar_periodo = true;
+                    this.permiso_Actualizar_periodo = true;
+                    this.permiso_Eliminar_periodo = true;
+                    this.permiso_Listar_periodo_documento = true;
+                    this.permiso_Listar_periodo_proyecto  = true;
+                  }
+                else {
+                  let permisosSesion: Funcion[] = this.sesionUsuarioActual.funciones;
+
+                  if(permisosSesion.length > 0){
+                    this.PERMISOS_USUARIO_PANTALLA =  permisosSesion.filter((permiso)=> (permiso.modulo == PermisosClientePartidaProcesoPeriodo.MODULO || PermisosClientePartidaProcesoPeriodoDocumento.MODULO || PermisosClientePartidaProcesoPeriodoProyecto.MODULO) && permiso.activo == true).map((Y)=>Y.funcion);
+                    this.permiso_Listar_periodo = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoPeriodo.LISTAR);
+                    this.permiso_Agregar_periodo = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoPeriodo.AGREGAR);
+                    this.permiso_Actualizar_periodo = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoPeriodo.EDITAR);
+                    this.permiso_Eliminar_periodo = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoPeriodo.ELIMINAR);
+                    this.permiso_Listar_periodo_documento = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoPeriodoDocumento.LISTAR);
+                    this.permiso_Listar_periodo_proyecto = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProcesoPeriodoProyecto.LISTAR);
+                  } else {
+                    this.PERMISOS_USUARIO_PANTALLA = [];
+                  }
+                }
   }
 
   public async obtenerPeriodos(){

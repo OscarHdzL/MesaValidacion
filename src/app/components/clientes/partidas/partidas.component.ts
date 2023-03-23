@@ -1,3 +1,4 @@
+import { PermisosClientePartidaProceso } from './../../../enum/PermisosPantallas.enum';
 import { ModalResponsablePartidaComponent } from './modal-responsable-partida/modal-responsable-partida.component';
 import { ClienteModel } from './../../../modelos/cliente.model';
 import { ProcesosComponent } from './../procesos/procesos.component';
@@ -13,8 +14,10 @@ import { TableColumn } from 'src/@vex/interfaces/table-column.interface';
 
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
-import { SesionModel } from 'src/app/modelos/sesion.model';
+import { Funcion, SesionModel } from 'src/app/modelos/sesion.model';
 import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
+import { PermisosClientePartida } from 'src/app/enum/PermisosPantallas.enum';
+import { debug } from 'console';
 
 @Component({
   selector: 'vex-partidas',
@@ -62,44 +65,12 @@ export class PartidasComponent implements OnInit {
               ) {
                 let sesion = localStorage.getItem(KeysStorageEnum.USER);
                 this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
-
-
-                this.esAdministrador = this.sesionUsuarioActual.administrador ? this.sesionUsuarioActual.administrador: false;
-
-                if(this.esAdministrador){
-                  this.permiso_Listar_proceso_partida = false;
-                  this.permiso_Listar_partida = true;
-                  this.permiso_Agregar_partida = true;
-                  this.permiso_Actualizar_partida = true;
-                  this.permiso_Eliminar_partida = true;
-                  this.permiso_Agregar_responsable_partida = true;
-                } else {
-                  this.permiso_Listar_proceso_partida = true;
-                  this.permiso_Listar_partida = true;
-                  this.permiso_Agregar_partida = false;
-                  this.permiso_Actualizar_partida = false;
-                  this.permiso_Eliminar_partida = false;
-                  this.permiso_Agregar_responsable_partida = false;
-                }
-
-                  //
-
-
-                /* let permisosSesion: PerfilRolModel[] = JSON.parse(localStorage.getItem('MENU_USUARIO'));
-                if(permisosSesion.length > 0){
-                  this.PERMISOS_USUARIO_PANTALLA =  permisosSesion.filter((permiso)=>permiso.alphaModulo == PermisosModuloCatalogoPartida.Alpha_Modulo).map((Y)=>Y.alphaModuloComponente);
-                  this.permiso_Listar_partida = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoPartida.Listar_partida);
-                  this.permiso_Agregar_partida = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoPartida.Agregar_partida);
-                  this.permiso_Actualizar_partida = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoPartida.Actualizar_partida);
-                  this.permiso_Eliminar_partida = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoPartida.Eliminar_partida);
-                  this.permiso_Listar_proceso_partida = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoPartida.Listar_proceso_partida);
-                } else {
-                  this.PERMISOS_USUARIO_PANTALLA = [];
-                } */
                }
 
   async ngOnInit() {
-
+    this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
+    this.definirPermisos();
     this.Partidas = await this.obtenerPartidas();
 
     //USUARIO RESPONSABLE
@@ -115,6 +86,41 @@ export class PartidasComponent implements OnInit {
     this.matPaginatorIntl.previousPageLabel  = 'Anterior página';
     this.matPaginatorIntl.nextPageLabel = 'Siguiente página';
 
+  }
+
+
+  public async obtenerFunciones(){
+    const respuesta = await this.mesaValidacionService.obtenerFuncionesUsuario(this.sesionUsuarioActual.id);
+    return respuesta.exito ? respuesta.respuesta : [];
+  }
+
+  public async definirPermisos(){
+
+    this.esAdministrador = this.sesionUsuarioActual.administrador ? this.sesionUsuarioActual.administrador: false;
+
+                if(this.esAdministrador){
+                  this.permiso_Listar_proceso_partida = false;
+                  this.permiso_Listar_partida = true;
+                  this.permiso_Agregar_partida = true;
+                  this.permiso_Actualizar_partida = true;
+                  this.permiso_Eliminar_partida = true;
+                  this.permiso_Agregar_responsable_partida = true;
+                } else {
+                  let permisosSesion: Funcion[] = this.sesionUsuarioActual.funciones;
+
+                  if(permisosSesion.length > 0){
+                    this.PERMISOS_USUARIO_PANTALLA =  permisosSesion.filter((permiso)=>(permiso.modulo == PermisosClientePartida.MODULO || PermisosClientePartida.MODULO) && permiso.activo == true ).map((Y)=>Y.funcion);
+                    this.permiso_Listar_partida = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartida.LISTAR);
+                    this.permiso_Agregar_partida = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartida.AGREGAR);
+                    this.permiso_Actualizar_partida = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartida.EDITAR);
+                    this.permiso_Eliminar_partida = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartida.ELIMINAR);
+                    this.permiso_Listar_proceso_partida = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartidaProceso.LISTAR);
+                    this.permiso_Agregar_responsable_partida = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartida.ASIGNAR);
+
+                  } else {
+                    this.PERMISOS_USUARIO_PANTALLA = [];
+                  }
+                }
   }
 
   public async obtenerPartidas(){

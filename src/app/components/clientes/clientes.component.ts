@@ -11,8 +11,9 @@ import { ClienteModel } from 'src/app/modelos/cliente.model';
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 import { ModalClienteComponent } from './modal-cliente/modal-cliente.component';
-import { SesionModel } from 'src/app/modelos/sesion.model';
+import { Funcion, SesionModel } from 'src/app/modelos/sesion.model';
 import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
+import { PermisosCliente, PermisosClientePartida } from 'src/app/enum/PermisosPantallas.enum';
 
 @Component({
   selector: 'vex-clientes',
@@ -57,40 +58,16 @@ export class ClientesComponent implements OnInit {
               private dialog: MatDialog,
               private mesaValidacionService: MesaValidacionService
               ) {
+                let sesion = localStorage.getItem(KeysStorageEnum.USER);
+                this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
 
-      let sesion = localStorage.getItem(KeysStorageEnum.USER);
-      this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
-      this.esAdministrador = this.sesionUsuarioActual.administrador ? this.sesionUsuarioActual.administrador: false;
-
-                if(this.esAdministrador){
-                  this.permiso_Listar_cliente = true;
-                  this.permiso_Agregar_cliente = true;
-                  this.permiso_Actualizar_cliente = true;
-                  this.permiso_Eliminar_cliente = true;
-                  this.permiso_Listar_proyecto_cliente = true;
-                }else{
-                  this.permiso_Listar_cliente = true;
-                  this.permiso_Agregar_cliente = false;
-                  this.permiso_Actualizar_cliente = false;
-                  this.permiso_Eliminar_cliente = false;
-                  this.permiso_Listar_proyecto_cliente = true;
-                }
-
-
-                /* let permisosSesion: PerfilRolModel[] = JSON.parse(localStorage.getItem('MENU_USUARIO'));
-                if(permisosSesion.length > 0){
-                  this.PERMISOS_USUARIO_PANTALLA =  permisosSesion.filter((permiso)=>permiso.alphaModulo == PermisosModuloCatalogoCliente.Alpha_Modulo).map((Y)=>Y.alphaModuloComponente);
-                  this.permiso_Listar_cliente = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoCliente.Listar_cliente);
-                  this.permiso_Agregar_cliente = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoCliente.Agregar_cliente);
-                  this.permiso_Actualizar_cliente = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoCliente.Actualizar_cliente);
-                  this.permiso_Eliminar_cliente = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoCliente.Eliminar_cliente);
-                  this.permiso_Listar_proyecto_cliente = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosModuloCatalogoCliente.Listar_proyecto_cliente);
-                } else {
-                  this.PERMISOS_USUARIO_PANTALLA = [];
-                } */
                }
 
   async ngOnInit() {
+    debugger
+    this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
+    this.definirPermisos();
     this.Clientes = await this.obtenerClientes();
 
 
@@ -104,6 +81,46 @@ export class ClientesComponent implements OnInit {
     this.matPaginatorIntl.nextPageLabel = 'Siguiente página';
 
   }
+
+
+  public async obtenerFunciones(){
+    const respuesta = await this.mesaValidacionService.obtenerFuncionesUsuario(this.sesionUsuarioActual.id);
+    return respuesta.exito ? respuesta.respuesta : [];
+  }
+
+  public async definirPermisos(){
+
+    this.esAdministrador = this.sesionUsuarioActual.administrador ? this.sesionUsuarioActual.administrador: false;
+
+      if(this.esAdministrador){
+        this.permiso_Listar_cliente = true;
+        this.permiso_Agregar_cliente = true;
+        this.permiso_Actualizar_cliente = true;
+        this.permiso_Eliminar_cliente = true;
+        this.permiso_Listar_proyecto_cliente = true;
+      }else{
+
+        let permisosSesion: Funcion[] = this.sesionUsuarioActual.funciones;
+
+        if(permisosSesion.length > 0){
+          this.PERMISOS_USUARIO_PANTALLA =  permisosSesion.filter((permiso) => (permiso.modulo == PermisosCliente.MODULO || permiso.modulo == PermisosClientePartida.MODULO) && permiso.activo == true ).map((Y)=>Y.funcion);
+          this.permiso_Listar_cliente = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosCliente.LISTAR);
+          this.permiso_Agregar_cliente = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosCliente.AGREGAR);
+          this.permiso_Actualizar_cliente = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosCliente.EDITAR);
+          this.permiso_Eliminar_cliente = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosCliente.ELIMINAR);
+          this.permiso_Listar_proyecto_cliente = this.PERMISOS_USUARIO_PANTALLA.includes(PermisosClientePartida.LISTAR);
+        } else {
+          this.PERMISOS_USUARIO_PANTALLA = [];
+        }
+      }
+
+
+
+
+  }
+
+
+
 
   public async obtenerClientes(){
     const respuesta = this.esAdministrador ? await this.mesaValidacionService.obtenerCatalogoClientes() : await this.mesaValidacionService.obtenerCatalogoClientesByResponsablePartida(this.sesionUsuarioActual.id);

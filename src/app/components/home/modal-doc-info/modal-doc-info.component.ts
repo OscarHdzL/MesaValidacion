@@ -405,9 +405,14 @@ export class ModalDocInfoComponent implements OnInit {
     versionValidar.descripcion = version.descripcion;
     versionValidar.detalle = version.detalle;
     versionValidar.editable = version.editable;
+    versionValidar.editableNombre = version.editableNombre;
+    versionValidar.editableExtension = version.editableExtension;
     versionValidar.firmado = version.firmado;
+    versionValidar.firmadoNombre = version.firmadoNombre;
+    versionValidar.firmadoExtension = version.firmadoExtension;
     versionValidar.validado = true;
     versionValidar.catUsuarioId = this.sesionUsuarioActual.id;
+
 
     const respuesta =  await this.mesaValidacionService.actualizarVersionDocumentosProyecto(versionValidar);
 

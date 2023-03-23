@@ -10,7 +10,7 @@ import { DocumentoFormModel } from '../modelos/documentos.model';
 import { ProyectoFormModel } from '../modelos/proyectos.model';
 import { AreaFormModel } from '../modelos/area.model';
 import { RolFormModel } from '../modelos/rol.model';
-import { UsuarioFormModel } from '../modelos/usuario.model';
+import {  FuncionUsuarioFormModel, UsuarioFormModel } from '../modelos/usuario.model';
 import { ProcesoUsuarioFormModel } from '../modelos/proceso-usuario.model';
 import { DocumentosProyectoFormModel } from '../modelos/DocumentosProyecto.model';
 import { ComentarioDocumentoProyectoFormModel } from '../modelos/ComentarioDocumentoProyecto.model';
@@ -199,12 +199,20 @@ export class MesaValidacionService extends ConfiguracionEndpointsService {
       return await this.getAsync(this.url_api + 'Usuarios');
     }
 
+    public async obtenerFuncionesUsuario(idUsuario: number) : Promise <any> {
+      return await this.getAsync(this.url_api + 'Usuarios/Funciones?idUsuario=' + idUsuario);
+    }
+
     public async insertarUsuario(usuario: UsuarioFormModel) : Promise <any> {
       return await this.postAsync(this.url_api + 'Usuarios', usuario);
     }
 
     public async actualizarUsuario(usuario: UsuarioFormModel) : Promise <any> {
       return await this.putAsync(this.url_api + 'Usuarios', usuario);
+    }
+
+    public async actualizarFuncionUsuario(funcion: FuncionUsuarioFormModel) : Promise <any> {
+      return await this.putAsync(this.url_api + 'Usuarios/Funciones', funcion);
     }
 
     public async deshabilitarUsuario(usuario: number) : Promise <any> {

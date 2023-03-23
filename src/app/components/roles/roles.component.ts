@@ -9,6 +9,8 @@ import { RolModel } from 'src/app/modelos/rol.model';
 import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 import { SwalServices } from 'src/app/servicios/sweetalert2.services';
 import { ModalRolComponent } from './modal-rol/modal-rol.component';
+import { SesionModel } from 'src/app/modelos/sesion.model';
+import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
 
 @Component({
   selector: 'vex-roles',
@@ -16,7 +18,7 @@ import { ModalRolComponent } from './modal-rol/modal-rol.component';
   styleUrls: ['./roles.component.scss']
 })
 export class RolesComponent implements OnInit {
-
+  sesionUsuarioActual: SesionModel;
   permiso_Listar_rol = false;
   permiso_Agregar_rol = false;
   permiso_Actualizar_rol = false;
@@ -46,6 +48,9 @@ export class RolesComponent implements OnInit {
               private dialog: MatDialog,
               private mesaValidacionService: MesaValidacionService
               ) {
+
+                let sesion = localStorage.getItem(KeysStorageEnum.USER);
+                this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
                   //
                   this.permiso_Listar_rol = true;
                   this.permiso_Agregar_rol = true;
@@ -67,6 +72,8 @@ export class RolesComponent implements OnInit {
                }
 
   async ngOnInit() {
+    this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
     this.Rols = await this.obtenerRols();
 
     this.dataSource = new MatTableDataSource<RolModel>(this.Rols);
@@ -77,6 +84,12 @@ export class RolesComponent implements OnInit {
     this.matPaginatorIntl.previousPageLabel  = 'Anterior página';
     this.matPaginatorIntl.nextPageLabel = 'Siguiente página';
 
+  }
+
+
+  public async obtenerFunciones(){
+    const respuesta = await this.mesaValidacionService.obtenerFuncionesUsuario(this.sesionUsuarioActual.id);
+    return respuesta.exito ? respuesta.respuesta : [];
   }
 
   public async obtenerRols(){

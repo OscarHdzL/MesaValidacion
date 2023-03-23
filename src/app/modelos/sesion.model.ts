@@ -38,4 +38,14 @@ export class SesionModel {
   correo: string;
   clientes: Cliente[];
   administrador: boolean;
+  funciones: Funcion[]
+
+}
+
+
+export class Funcion {
+  id:      number;
+  modulo:  string;
+  funcion: string;
+  activo: boolean;
 }
