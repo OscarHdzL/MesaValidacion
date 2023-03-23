@@ -64,6 +64,7 @@ export class DocumentosComponent implements OnInit {
 
   async ngOnInit() {
     this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    //SE SOBREESCRIBE EL VALOR POR SI HUBO CAMBIOS EN LAS FUNCIONES
     localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
     this.definirPermisos();
     this.Documentos = await this.obtenerDocumentos();

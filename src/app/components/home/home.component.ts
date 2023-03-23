@@ -52,11 +52,14 @@ export class HomeComponent implements OnInit {
   }
 
   async ngOnInit() {
+    debugger
+    //SE SOBREESCRIBE EL VALOR POR SI HUBO CAMBIOS EN LAS FUNCIONES
     this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
-    localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
+    //SE SOBREESCRIBE EL VALOR POR SI HUBO CAMBIOS EN LOS CLIENTES
     this.sesionUsuarioActual.clientes = await this.obtenerClientesUsuarioSesion();
+    localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
     this.listaClientes = await this.obtenerClientes();
-    //this.changeProyecto(1);
+    this.changeProyecto(22);
 
     if(window.innerWidth <= 500) {
       this.getScreenWidth = '100%'

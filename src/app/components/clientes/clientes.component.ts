@@ -64,8 +64,9 @@ export class ClientesComponent implements OnInit {
                }
 
   async ngOnInit() {
-    debugger
+debugger
     this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    //SE SOBREESCRIBE EL VALOR POR SI HUBO CAMBIOS EN LAS FUNCIONES
     localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
     this.definirPermisos();
     this.Clientes = await this.obtenerClientes();
@@ -123,6 +124,7 @@ export class ClientesComponent implements OnInit {
 
 
   public async obtenerClientes(){
+    debugger
     const respuesta = this.esAdministrador ? await this.mesaValidacionService.obtenerCatalogoClientes() : await this.mesaValidacionService.obtenerCatalogoClientesByResponsablePartida(this.sesionUsuarioActual.id);
     if(respuesta.exito){
       if(this.esAdministrador){

@@ -78,6 +78,7 @@ export class ProcesoUsuariosComponent implements OnInit {
 
   async ngOnInit() {
     this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    //SE SOBREESCRIBE EL VALOR POR SI HUBO CAMBIOS EN LAS FUNCIONES
     localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
     this.definirPermisos();
     this.ProcesoUsuarios = await this.obtenerProcesoUsuarios();
@@ -99,7 +100,7 @@ export class ProcesoUsuariosComponent implements OnInit {
   }
 
   public async definirPermisos(){
-debugger
+
     this.esAdministrador = this.sesionUsuarioActual.administrador ? this.sesionUsuarioActual.administrador: false;
     if(this.esAdministrador){
       this.permiso_Listar_procesoUsuario = true;

@@ -20,7 +20,10 @@ export class AuthGuard implements CanActivate {
       this.user = localStorage.getItem(KeysStorageEnum.USER);
       console.log("guardian :" + this.user)
       if (!this.user) {
+        localStorage.removeItem(KeysStorageEnum.USER);
         return this.router.navigate(['/login']).then(() => false);
+      } else {
+
       }
     return true;
   }

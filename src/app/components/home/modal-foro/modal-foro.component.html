@@ -120,10 +120,12 @@
                 <div
                   class="bg-white p-6 w-fit rounded-3xl rounded-bl-none shadow-sm mb-2"
                 >
-                  <p class="mb-1">{{ comentario.catUsuario.nombre }}</p>
-                  <small class="text-gray-500 font-light mensaje-texto">
+                  <p class="mensaje-texto">
+                    <b>{{ comentario.catUsuario.nombre }}</b>
+                  </p>
+                  <p class="text-gray-700 font-light mensaje-texto">
                     {{ comentario.comentario }}
-                  </small>
+                  </p>
                 </div>
                 <small class="text-gray-500">{{
                   comentario.inclusion | date : "yyyy-MM-dd hh:mm:ss"
@@ -138,12 +140,12 @@
                 <div
                   class="bg-white p-6 w-fit rounded-3xl rounded-br-none shadow-sm mb-2"
                 >
-                  <p class="mb-1 flex justify-end">
-                    {{ comentario.catUsuario.nombre }}
+                  <p class=" mensaje-texto">
+                    <b>{{ comentario.catUsuario.nombre }}</b>
                   </p>
-                  <small class="text-gray-500 font-light mensaje-texto">
+                  <p class="text-gray-700 font-light mb-1 flex justify-end">
                     {{ comentario.comentario }}
-                  </small>
+                  </p>
                 </div>
                 <small class="text-gray-500 self-end">{{
                   comentario.inclusion | date : "yyyy-MM-dd hh:mm:ss"

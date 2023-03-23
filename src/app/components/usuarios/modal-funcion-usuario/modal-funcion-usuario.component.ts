@@ -87,7 +87,7 @@ export class ModalFuncionUsuarioComponent implements OnInit {
                }
 
   async ngOnInit() {
-    debugger
+
     this.Funciones = await this.obtenerFunciones();
 
     this.dataSource = new MatTableDataSource<DocumentoModel>(this.Funciones);
@@ -110,7 +110,7 @@ export class ModalFuncionUsuarioComponent implements OnInit {
   }
 
 public async actualizarFuncion(funcion: FuncionModel, evento: any ){
-  debugger
+
   console.log("Evento: ", evento);
   const fun: FuncionUsuarioFormModel = {
     id: funcion.id,

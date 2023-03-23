@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SearchModalComponent } from '../../components/search-modal/search-modal.component';
 import { SesionModel } from 'src/app/modelos/sesion.model';
 import { KeysStorageEnum } from 'src/app/enum/keysStorage.enum';
+import { MesaValidacionService } from 'src/app/servicios/mesa-validacion.service';
 
 @Component({
   selector: 'vex-sidenav',
@@ -35,15 +36,22 @@ export class SidenavComponent implements OnInit {
               private layoutService: LayoutService,
               private configService: ConfigService,
               private readonly popoverService: PopoverService,
-              private readonly dialog: MatDialog) {
+              private readonly dialog: MatDialog,
+              private mesaValidacionService: MesaValidacionService
+              ) {
 
                 let sesion = localStorage.getItem(KeysStorageEnum.USER);
     this.sesionUsuarioActual = JSON.parse(sesion) as SesionModel;
 
               }
 
-  ngOnInit() {
+ async ngOnInit() {
 debugger
+
+    this.sesionUsuarioActual.funciones = await this.obtenerFunciones();
+    //SE SOBREESCRIBE EL VALOR POR SI HUBO CAMBIOS EN LAS FUNCIONES (SIDEBAR)
+    localStorage.setItem(KeysStorageEnum.USER,JSON.stringify(this.sesionUsuarioActual));
+
     let children = [];
      let menu = this.sesionUsuarioActual.funciones.filter((x)=> x.modulo == 'Sidebar' && x.activo == true);
      menu.forEach((x)=>{
@@ -182,6 +190,12 @@ debugger
       ];
     } */
   }
+  //METODO PARA OBTENER LAS FUNCIONES DEL USUARIO, SE EJECUTA EN ESTE COMPONENTE PARA QUE SE EJECUTE LA ACTUALIZACION DE FUNCIONES SIN NECESIDAD DE CERRAR SESION
+  public async obtenerFunciones(){
+    const respuesta = await this.mesaValidacionService.obtenerFuncionesUsuario(this.sesionUsuarioActual.id);
+    return respuesta.exito ? respuesta.respuesta : [];
+  }
+
 
   collapseOpenSidenav() {
     this.layoutService.collapseOpenSidenav();

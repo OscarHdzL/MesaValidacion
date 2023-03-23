@@ -230,7 +230,7 @@ export class ModalDocInfoComponent implements OnInit {
     this.versionDocumentoModel.detalle = this.detalleEdicion.value;
     this.versionDocumentoModel.editable = this.archivoEditableTokenEdicion;
     this.versionDocumentoModel.firmado = this.archivoFirmadoTokenEdicion;
-    this.versionDocumentoModel.validado = false;
+    this.versionDocumentoModel.validado = this.ultimaVersionModel.validado;
     this.versionDocumentoModel.catUsuarioId = this.sesionUsuarioActual.id;
     this.versionDocumentoModel.editableNombre = this.archivoEditableNombreEdicion;
     this.versionDocumentoModel.editableExtension = this.archivoEditableExtensionEdicion;
