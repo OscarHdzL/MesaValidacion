@@ -1,3 +1,4 @@
+import { Timestamp } from "rxjs";
 
 export class Proyecto {
   id: number;
@@ -39,7 +40,7 @@ export class SesionModel {
   clientes: Cliente[];
   administrador: boolean;
   funciones: Funcion[]
-
+  vigenciaSesion : number
 }
 
 

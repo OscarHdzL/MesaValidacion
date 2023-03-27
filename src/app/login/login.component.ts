@@ -51,6 +51,10 @@ export class LoginComponent implements OnInit {
       if(res.exito == true) {
 
         let sesion = res.respuesta as SesionModel
+        let fActual = new Date();
+        let minutos = 30;
+        sesion.vigenciaSesion = new Date().setTime(fActual.getTime() + (minutos * 60 * 1000) )
+        console.log(sesion.vigenciaSesion + " se establecio la vigencia" )
         localStorage.setItem(KeysStorageEnum.USER, JSON.stringify(sesion));
         this.router.navigate(['/components/inicio']);
         this.snackbar.open('Acceso correcto', null, {
