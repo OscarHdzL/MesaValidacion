@@ -275,6 +275,7 @@ export class ModalDocInfoComponent implements OnInit {
 
         this.archivoEditableNombre = event.target.files[0].name;
         this.archivoEditableToken = respuesta.anotacion;
+        //this.archivoEditableToken = respuesta.respuesta;
         this.archivoEditableExtension = this.archivoEditableNombre.split('.')[1];
       } else {
         this.swalService.alertaPersonalizada(false, 'No se pudo cargar el archivo');
@@ -292,6 +293,7 @@ export class ModalDocInfoComponent implements OnInit {
      if(respuesta.exito){
        this.archivoFirmadoNombre = event.target.files[0].name;
        this.archivoFirmadoToken = respuesta.anotacion;
+       //this.archivoFirmadoToken = respuesta.respuesta;
        this.archivoFirmadoExtension = this.archivoFirmadoNombre.split('.')[1];
      } else {
        this.swalService.alertaPersonalizada(false, 'No se pudo cargar el archivo');
@@ -315,6 +317,7 @@ export class ModalDocInfoComponent implements OnInit {
 
         this.archivoEditableNombreEdicion = event.target.files[0].name;
         this.archivoEditableTokenEdicion = respuesta.anotacion;
+        //this.archivoEditableTokenEdicion = respuesta.respuesta;
         this.archivoEditableExtensionEdicion = this.archivoEditableNombreEdicion.split('.')[1];
 
       } else {
@@ -334,6 +337,8 @@ export class ModalDocInfoComponent implements OnInit {
 
        this.archivoFirmadoNombreEdicion = event.target.files[0].name;
        this.archivoFirmadoTokenEdicion = respuesta.anotacion;
+       //this.archivoFirmadoTokenEdicion = respuesta.respuesta;
+
        this.archivoFirmadoExtensionEdicion = this.archivoFirmadoNombreEdicion.split('.')[1];
      } else {
        this.swalService.alertaPersonalizada(false, 'No se pudo cargar el archivo');

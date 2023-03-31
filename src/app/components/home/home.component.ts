@@ -74,7 +74,7 @@ export class HomeComponent implements OnInit {
 
 
     this.listaClientes = await this.obtenerClientes();
-    //this.changeProyecto(22);
+    this.changeProyecto(1);
 
     if(window.innerWidth <= 500) {
       this.getScreenWidth = '100%'

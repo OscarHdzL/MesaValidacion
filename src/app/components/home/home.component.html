@@ -70,7 +70,7 @@
       <div class=" mt-4 flex flex-col text-center justify-center gap-2 mr-5" *ngIf="this.listaDocumentosProyecto.length > 0">
         <h1 class="title m-5">Documentos por cubrir</h1>
         <div class="mb-5" *ngFor="let data of listaDocumentosProyecto" >
-          <div class="flex flex-row">
+          <div class="flex flex-col xl:flex-row lg:flex-row md:flex-row sm:flex-row" >
             <div class="basis-1/3">
               <div class="flex justify-end">
                 <p class="inline-block font-bold">Versiones:</p>
@@ -91,7 +91,7 @@
               </div>
             </div>
             <div class="basis-2/3">
-              <mat-card class="inline-block ml-5 items-center flex flex-col w-3/4" >
+              <mat-card class="inline-block ml-5 items-center flex flex-col  xl:w-3/4 lg:w-3/4 md:w-3/4 w-full" >
                 <mat-card-header >
                     <mat-card-title>{{data.documento}}</mat-card-title>
                     <mat-card-subtitle>{{data.proyecto}}</mat-card-subtitle>
